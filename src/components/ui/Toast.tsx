@@ -12,6 +12,7 @@ import {
 import { createPortal } from "react-dom";
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useIsClient } from "@/lib/useIsClient";
 
 export type ToastVariant = "success" | "warning" | "error" | "info";
 
@@ -96,9 +97,7 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: (id: strin
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<ToastItem[]>([]);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsClient();
 
   const dismiss = useCallback((id: string) => {
     setItems((prev) => prev.filter((t) => t.id !== id));

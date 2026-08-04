@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useIsClient } from "@/lib/useIsClient";
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -31,20 +32,7 @@ export function Modal({
   const descId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
-
-  const [mounted, setMounted] = useState(false);
-  const [render, setRender] = useState(open);
-
-  useEffect(() => setMounted(true), []);
-
-  useEffect(() => {
-    if (open) {
-      setRender(true);
-      return;
-    }
-    const timeout = setTimeout(() => setRender(false), 200);
-    return () => clearTimeout(timeout);
-  }, [open]);
+  const mounted = useIsClient();
 
   useEffect(() => {
     if (open) {
@@ -88,17 +76,20 @@ export function Modal({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  if (!mounted || !render) return null;
+  if (!mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+    <div
+      inert={!open}
+      className={cn(
+        "fixed inset-0 z-100 flex items-center justify-center p-4 transition-opacity duration-200",
+        open ? "opacity-100" : "pointer-events-none opacity-0",
+      )}
+    >
       <div
         onClick={onClose}
         aria-hidden="true"
-        className={cn(
-          "absolute inset-0 bg-brand-black/50 backdrop-blur-sm transition-opacity duration-200",
-          open ? "opacity-100" : "opacity-0",
-        )}
+        className="absolute inset-0 bg-brand-black/50 backdrop-blur-sm"
       />
       <div
         ref={panelRef}
@@ -108,9 +99,9 @@ export function Modal({
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
         className={cn(
-          "relative w-full rounded-2xl bg-white p-6 shadow-lg transition-all duration-200",
+          "relative w-full rounded-2xl bg-white p-6 shadow-lg transition-transform duration-200",
           sizeClasses[size],
-          open ? "translate-y-0 scale-100 opacity-100" : "translate-y-2 scale-95 opacity-0",
+          open ? "translate-y-0 scale-100" : "translate-y-2 scale-95",
           className,
         )}
       >

@@ -23,7 +23,7 @@ export function SectionHeading({
       )}
       <h2
         className={cn(
-          "text-h2 font-extrabold tracking-tight",
+          "text-3xl font-extrabold tracking-tight sm:text-h2",
           tone === "light" ? "text-white" : "text-brand-black",
         )}
       >

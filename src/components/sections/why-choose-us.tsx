@@ -1,4 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Card } from "@/components/ui/Card";
 
 const usps = [
   { feature: "Verified Listings", benefit: "No fake or outdated PGs" },
@@ -13,22 +15,17 @@ export function WhyChooseUs() {
   return (
     <section className="bg-white py-16 lg:py-24">
       <div className="container-page">
-        <h2 className="text-center text-3xl font-extrabold tracking-tight text-brand-black sm:text-4xl">
-          Why Choose SR Stays
-        </h2>
+        <SectionHeading>Why Choose SR Stays</SectionHeading>
 
         <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2">
           {usps.map((usp) => (
-            <div
-              key={usp.feature}
-              className="flex items-start gap-3 rounded-xl border border-black/10 p-5"
-            >
+            <Card key={usp.feature} padding="sm" className="flex items-start gap-3">
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-red" aria-hidden="true" />
               <div>
                 <p className="font-semibold text-brand-black">{usp.feature}</p>
                 <p className="mt-1 text-sm text-brand-black/60">{usp.benefit}</p>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

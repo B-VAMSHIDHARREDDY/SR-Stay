@@ -1,3 +1,6 @@
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Card } from "@/components/ui/Card";
+
 const testimonials = [
   {
     quote:
@@ -17,25 +20,18 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="bg-black/2 py-16 lg:py-24">
+    <section id="testimonials" className="bg-surface-muted py-16 lg:py-24">
       <div className="container-page">
-        <h2 className="text-center text-3xl font-extrabold tracking-tight text-brand-black sm:text-4xl">
-          What Our Users Say
-        </h2>
+        <SectionHeading>What Our Users Say</SectionHeading>
 
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {testimonials.map((t) => (
-            <figure
-              key={t.author}
-              className="rounded-2xl border border-black/10 bg-white p-6"
-            >
+            <Card key={t.author}>
               <blockquote className="text-sm leading-relaxed text-brand-black/75">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
-              <figcaption className="mt-4 text-sm font-semibold text-brand-red">
-                — {t.author}
-              </figcaption>
-            </figure>
+              <p className="mt-4 text-sm font-semibold text-brand-red">— {t.author}</p>
+            </Card>
           ))}
         </div>
       </div>

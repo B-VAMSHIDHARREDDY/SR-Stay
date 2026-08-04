@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/site-config";
+import { ToastProvider } from "@/components/ui/Toast";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -63,9 +64,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <JsonLd data={mobileApplicationJsonLd} />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ToastProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </ToastProvider>
       </body>
     </html>
   );

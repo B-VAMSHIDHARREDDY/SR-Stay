@@ -16,10 +16,12 @@ export function Select({
   onChange,
   placeholder = "Select…",
   label,
+  hideLabel = false,
   leadingIcon,
   searchable = false,
   emptyMessage = "No results found",
   size = "md",
+  bare = false,
   className,
 }: {
   options: SelectOption[];
@@ -27,10 +29,13 @@ export function Select({
   onChange: (value: string) => void;
   placeholder?: string;
   label?: string;
+  hideLabel?: boolean;
   leadingIcon?: ReactNode;
   searchable?: boolean;
   emptyMessage?: string;
   size?: "sm" | "md" | "lg";
+  /** Renders the trigger without its own border/background — for embedding inside another bordered container. */
+  bare?: boolean;
   className?: string;
 }) {
   const id = useId();
@@ -52,23 +57,12 @@ export function Select({
 
   useEffect(() => {
     function onDocMouseDown(e: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
+      if (open && rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        closeMenu();
       }
     }
     document.addEventListener("mousedown", onDocMouseDown);
     return () => document.removeEventListener("mousedown", onDocMouseDown);
-  }, []);
-
-  useEffect(() => {
-    if (open) {
-      const idx = options.findIndex((o) => o.value === value);
-      setActiveIndex(idx >= 0 ? idx : 0);
-      if (searchable) requestAnimationFrame(() => searchRef.current?.focus());
-    } else {
-      setQuery("");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   useEffect(() => {
@@ -78,17 +72,29 @@ export function Select({
     }
   }, [activeIndex, open]);
 
+  function openMenu() {
+    const idx = options.findIndex((o) => o.value === value);
+    setActiveIndex(idx >= 0 ? idx : 0);
+    setOpen(true);
+    if (searchable) requestAnimationFrame(() => searchRef.current?.focus());
+  }
+
+  function closeMenu() {
+    setOpen(false);
+    setQuery("");
+  }
+
   function selectIndex(idx: number) {
     const opt = filtered[idx];
     if (!opt) return;
     onChange(opt.value);
-    setOpen(false);
+    closeMenu();
   }
 
   function handleTriggerKeyDown(e: KeyboardEvent<HTMLButtonElement>) {
     if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
       e.preventDefault();
-      setOpen(true);
+      openMenu();
     }
   }
 
@@ -116,11 +122,11 @@ export function Select({
         break;
       case "Escape":
         e.preventDefault();
-        setOpen(false);
+        closeMenu();
         rootRef.current?.querySelector<HTMLButtonElement>("[data-select-trigger]")?.focus();
         break;
       case "Tab":
-        setOpen(false);
+        closeMenu();
         break;
     }
   }
@@ -130,7 +136,10 @@ export function Select({
   return (
     <div ref={rootRef} className={cn("relative", className)}>
       {label && (
-        <label htmlFor={id} className="text-label mb-1.5 block font-medium text-brand-black/80">
+        <label
+          htmlFor={id}
+          className={hideLabel ? "sr-only" : "text-label mb-1.5 block font-medium text-brand-black/80"}
+        >
           {label}
         </label>
       )}
@@ -140,12 +149,17 @@ export function Select({
         data-select-trigger
         aria-haspopup="listbox"
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => (open ? closeMenu() : openMenu())}
         onKeyDown={handleTriggerKeyDown}
         className={cn(
-          "flex w-full items-center gap-2 rounded-lg border bg-white px-3.5 text-left transition-colors",
+          "flex w-full items-center gap-2 text-left transition-colors",
           sizeClasses,
-          open ? "border-brand-red ring-2 ring-brand-red/15" : "border-border hover:border-brand-black/25",
+          bare
+            ? "bg-transparent"
+            : cn(
+                "rounded-lg border bg-white px-3.5",
+                open ? "border-brand-red ring-2 ring-brand-red/15" : "border-border hover:border-brand-black/25",
+              ),
         )}
       >
         {leadingIcon && <span className="shrink-0 text-brand-red">{leadingIcon}</span>}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -24,16 +24,6 @@ export function Sidebar({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [drawerRender, setDrawerRender] = useState(false);
-
-  useEffect(() => {
-    if (mobileOpen) {
-      setDrawerRender(true);
-      return;
-    }
-    const timeout = setTimeout(() => setDrawerRender(false), 200);
-    return () => clearTimeout(timeout);
-  }, [mobileOpen]);
 
   function renderNav(showLabels: boolean) {
     return (
@@ -103,37 +93,34 @@ export function Sidebar({
         {renderNav(!collapsed)}
       </aside>
 
-      {drawerRender && (
-        <div className="fixed inset-0 z-100 lg:hidden">
-          <div
-            onClick={() => setMobileOpen(false)}
-            aria-hidden="true"
-            className={cn(
-              "absolute inset-0 bg-brand-black/50 transition-opacity duration-200",
-              mobileOpen ? "opacity-100" : "opacity-0",
-            )}
-          />
-          <aside
-            className={cn(
-              "absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white py-4 shadow-lg transition-transform duration-200",
-              mobileOpen ? "translate-x-0" : "-translate-x-full",
-            )}
-          >
-            <div className="flex items-center justify-between px-4 pb-4">
-              {header}
-              <button
-                type="button"
-                onClick={() => setMobileOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-black/60 hover:bg-black/5"
-                aria-label="Close sidebar"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-            {renderNav(true)}
-          </aside>
-        </div>
-      )}
+      <div
+        inert={!mobileOpen}
+        className={cn(
+          "fixed inset-0 z-100 transition-opacity duration-200 lg:hidden",
+          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+      >
+        <div onClick={() => setMobileOpen(false)} aria-hidden="true" className="absolute inset-0 bg-brand-black/50" />
+        <aside
+          className={cn(
+            "absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white py-4 shadow-lg transition-transform duration-200",
+            mobileOpen ? "translate-x-0" : "-translate-x-full",
+          )}
+        >
+          <div className="flex items-center justify-between px-4 pb-4">
+            {header}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-black/60 hover:bg-black/5"
+              aria-label="Close sidebar"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+          {renderNav(true)}
+        </aside>
+      </div>
     </>
   );
 }

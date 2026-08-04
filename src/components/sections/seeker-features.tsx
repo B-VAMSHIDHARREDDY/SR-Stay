@@ -1,6 +1,7 @@
-import Link from "next/link";
 import { Search, Home, IndianRupee, Star, Phone, MapPin } from "lucide-react";
 import { FeatureCard } from "@/components/feature-card";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const features = [
   {
@@ -41,13 +42,9 @@ const features = [
 
 export function SeekerFeatures() {
   return (
-    <section id="find-a-pg" className="bg-black/2 py-16 lg:py-24">
+    <section id="find-a-pg" className="bg-surface-muted py-16 lg:py-24">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-brand-black sm:text-4xl">
-            Search, Compare & Move In — In Minutes
-          </h2>
-        </div>
+        <SectionHeading>Search, Compare & Move In — In Minutes</SectionHeading>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
@@ -56,12 +53,7 @@ export function SeekerFeatures() {
         </div>
 
         <div className="mt-10 text-center">
-          <Link
-            href="/#cities"
-            className="inline-block rounded-lg bg-brand-red px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark"
-          >
-            Search Best PG Near Me →
-          </Link>
+          <Button href="/#cities">Search Best PG Near Me →</Button>
         </div>
       </div>
     </section>

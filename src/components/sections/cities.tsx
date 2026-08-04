@@ -1,25 +1,21 @@
 import Link from "next/link";
 import { cities } from "@/lib/cities";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export function Cities() {
   return (
     <section id="cities" className="bg-white py-16 lg:py-24">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-brand-black sm:text-4xl">
-            Best PG Accommodations Across India
-          </h2>
-          <p className="mt-4 text-brand-black/65">
-            Explore verified PGs in your city with hyperlocal search and real pricing.
-          </p>
-        </div>
+        <SectionHeading description="Explore verified PGs in your city with hyperlocal search and real pricing.">
+          Best PG Accommodations Across India
+        </SectionHeading>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {cities.map((city) => (
             <Link
               key={city.slug}
               href={`/pg-in-${city.slug}`}
-              className="group flex items-center justify-between rounded-xl border border-black/10 bg-white px-5 py-4 transition-colors hover:border-brand-red"
+              className="group flex items-center justify-between rounded-xl border border-border bg-white px-5 py-4 shadow-sm transition-all duration-200 hover:border-brand-red hover:shadow-md"
             >
               <div>
                 <p className="font-semibold text-brand-black group-hover:text-brand-red">

@@ -1,5 +1,6 @@
 import { Apple, PlayCircle, QrCode } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
+import { Button } from "@/components/ui/Button";
 
 export function DownloadApp() {
   return (
@@ -10,7 +11,7 @@ export function DownloadApp() {
       />
       <div className="container-page relative flex flex-col items-center gap-10 text-center lg:flex-row lg:text-left">
         <div className="flex-1">
-          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight sm:text-h2">
             Download SR Stays — Search PGs on the Go
           </h2>
           <p className="mt-4 text-white/65">
@@ -18,20 +19,12 @@ export function DownloadApp() {
             requests — right from your phone.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-4 lg:justify-start">
-            <a
-              href={siteConfig.links.appStore}
-              className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/5 px-6 py-3 text-sm font-semibold transition-colors hover:bg-white/10"
-            >
-              <Apple className="h-5 w-5" aria-hidden="true" />
+            <Button href={siteConfig.links.appStore} variant="outline-inverse" icon={<Apple className="h-5 w-5" />}>
               App Store
-            </a>
-            <a
-              href={siteConfig.links.googlePlay}
-              className="flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold transition-colors hover:bg-brand-red-dark"
-            >
-              <PlayCircle className="h-5 w-5" aria-hidden="true" />
+            </Button>
+            <Button href={siteConfig.links.googlePlay} icon={<PlayCircle className="h-5 w-5" />}>
               Google Play
-            </a>
+            </Button>
           </div>
         </div>
 

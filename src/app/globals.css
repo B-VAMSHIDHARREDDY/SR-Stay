@@ -45,15 +45,18 @@
 
   /* Typography scale — pair each size with its line-height.
      Weight is applied per-use via Tailwind's font-* utilities
-     (extrabold for h1/h2, bold for h3/h4, semibold for label). */
-  --text-h1: 2.75rem;
+     (extrabold for h1/h2, bold for h3/h4, semibold for label).
+     h1/h2 are the ≥sm (desktop) step — pair with a smaller default
+     Tailwind size for mobile, e.g. `text-4xl sm:text-h1`, so headings
+     stay readable down to 320px instead of a single fixed size. */
+  --text-h1: 3rem;
   --text-h1--line-height: 1.1;
   --text-h2: 2.25rem;
   --text-h2--line-height: 1.15;
   --text-h3: 1.5rem;
   --text-h3--line-height: 1.3;
-  --text-h4: 1.25rem;
-  --text-h4--line-height: 1.35;
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.4;
   --text-body: 1rem;
   --text-body--line-height: 1.6;
   --text-caption: 0.8125rem;

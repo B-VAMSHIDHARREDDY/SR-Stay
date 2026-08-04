@@ -1,3 +1,6 @@
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Card } from "@/components/ui/Card";
+
 const tracks = [
   {
     title: "For PG Seekers",
@@ -15,16 +18,14 @@ const tracks = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-black/2 py-16 lg:py-24">
+    <section id="how-it-works" className="bg-surface-muted py-16 lg:py-24">
       <div className="container-page">
-        <h2 className="text-center text-3xl font-extrabold tracking-tight text-brand-black sm:text-4xl">
-          How It Works
-        </h2>
+        <SectionHeading>How It Works</SectionHeading>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
           {tracks.map((track) => (
-            <div key={track.title} className="rounded-2xl border border-black/10 bg-white p-6">
-              <h3 className="text-lg font-bold text-brand-black">{track.title}</h3>
+            <Card key={track.title}>
+              <h3 className="text-h4 font-bold text-brand-black">{track.title}</h3>
               <ol className="mt-5 space-y-4">
                 {track.steps.map((step, i) => (
                   <li key={step} className="flex items-center gap-3">
@@ -35,7 +36,7 @@ export function HowItWorks() {
                   </li>
                 ))}
               </ol>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

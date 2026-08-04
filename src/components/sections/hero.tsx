@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link";
 import { MapPin, Search, CheckCircle2, Home } from "lucide-react";
 import { cities } from "@/lib/cities";
+import { Button } from "@/components/ui/Button";
+import { Select } from "@/components/ui/Select";
 
 const trustStats = [
   "10,000+ Verified PGs",
@@ -30,7 +31,7 @@ export function Hero() {
       />
       <div className="container-page relative grid gap-12 py-16 lg:grid-cols-2 lg:items-center lg:py-24">
         <div>
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-brand-black sm:text-5xl">
+          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-brand-black sm:text-h1">
             Find the Best PG Near You — <span className="text-brand-red">Stay Comfort, Feel Home</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-brand-black/70">
@@ -43,47 +44,28 @@ export function Hero() {
             onSubmit={handleSearch}
             className="mt-8 flex flex-col gap-3 rounded-2xl border border-black/10 bg-white p-3 shadow-sm sm:flex-row sm:items-center"
           >
-            <label className="sr-only" htmlFor="city-select">
-              City / locality
-            </label>
-            <div className="flex flex-1 items-center gap-2 px-2">
-              <MapPin className="h-4 w-4 text-brand-red" aria-hidden="true" />
-              <select
-                id="city-select"
+            <div className="flex-1">
+              <Select
+                label="City / locality"
+                hideLabel
+                bare
+                leadingIcon={<MapPin className="h-4 w-4" />}
+                options={cities.map((c) => ({ value: c.slug, label: c.name }))}
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-transparent py-2 text-sm text-brand-black outline-none"
-              >
-                {cities.map((c) => (
-                  <option key={c.slug} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+                onChange={setCity}
+              />
             </div>
             <div className="hidden h-8 w-px bg-black/10 sm:block" aria-hidden="true" />
-            <button
-              type="submit"
-              className="flex items-center justify-center gap-2 rounded-xl bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark"
-            >
-              <Search className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+            <Button type="submit" icon={<Search className="h-4 w-4" strokeWidth={2.5} />}>
               Search PG
-            </button>
+            </Button>
           </form>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href="/#find-a-pg"
-              className="rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark"
-            >
-              Find My PG
-            </Link>
-            <Link
-              href="/#list-your-pg"
-              className="rounded-lg border-2 border-brand-black px-6 py-3 text-sm font-semibold text-brand-black transition-colors hover:bg-brand-black hover:text-white"
-            >
+            <Button href="/#find-a-pg">Find My PG</Button>
+            <Button href="/#list-your-pg" variant="outline">
               List Your PG (For Owners)
-            </Link>
+            </Button>
           </div>
 
           <dl className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">

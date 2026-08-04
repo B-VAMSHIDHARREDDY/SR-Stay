@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 import { Logo } from "./logo";
+import { Button } from "./ui/Button";
+import { cn } from "@/lib/cn";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -34,64 +37,47 @@ export function Navbar() {
         </nav>
 
         <div className="hidden lg:block">
-          <Link
-            href="/#download"
-            className="rounded-lg bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark"
-          >
+          <Button href="/#download" size="sm">
             Download App
-          </Link>
+          </Button>
         </div>
 
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-black lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-black transition-colors hover:bg-black/5 lg:hidden"
           aria-label="Toggle menu"
           aria-expanded={open}
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            {open ? (
-              <path
-                d="M6 6l12 12M18 6L6 18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            ) : (
-              <path
-                d="M4 7h16M4 12h16M4 17h16"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            )}
-          </svg>
+          {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
         </button>
       </div>
 
-      {open && (
-        <div className="border-t border-black/5 bg-white lg:hidden">
+      <div
+        inert={!open}
+        className={cn(
+          "grid border-t border-black/5 bg-white transition-[grid-template-rows] duration-300 ease-out lg:hidden",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr] border-transparent",
+        )}
+      >
+        <div className="overflow-hidden">
           <nav className="container-page flex flex-col gap-1 py-3" aria-label="Mobile">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-sm font-medium text-brand-black/80 hover:bg-black/5 hover:text-brand-red"
+                className="rounded-md px-2 py-2.5 text-sm font-medium text-brand-black/80 transition-colors hover:bg-black/5 hover:text-brand-red"
               >
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/#download"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-lg bg-brand-red px-5 py-2.5 text-center text-sm font-semibold text-white"
-            >
+            <Button href="/#download" onClick={() => setOpen(false)} className="mt-2 w-full">
               Download App
-            </Link>
+            </Button>
           </nav>
         </div>
-      )}
+      </div>
     </header>
   );
 }

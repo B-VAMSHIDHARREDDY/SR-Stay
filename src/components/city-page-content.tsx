@@ -5,6 +5,11 @@ import { JsonLd } from "@/components/json-ld";
 import { cities, getCityBySlug } from "@/lib/cities";
 import { faqs } from "@/lib/faqs";
 import { siteConfig } from "@/lib/site-config";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { FaqList } from "@/components/faq-list";
 
 export function buildCityMetadata(slug: string): Metadata {
   const city = getCityBySlug(slug);
@@ -68,55 +73,38 @@ export function CityPageContent({ slug }: { slug: string }) {
             <span className="text-brand-black/70">PG in {city.name}</span>
           </nav>
 
-          <h1 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-brand-black sm:text-5xl">
+          <h1 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-brand-black sm:text-h1">
             {city.heading}
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-brand-black/70">{city.intro}</p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <span className="rounded-lg bg-brand-red/10 px-4 py-2 text-sm font-semibold text-brand-red">
-              {city.pgCount} Verified PGs
-            </span>
-            <span className="rounded-lg bg-black/5 px-4 py-2 text-sm font-semibold text-brand-black">
-              {city.region}
-            </span>
+            <Badge variant="brand">{city.pgCount} Verified PGs</Badge>
+            <Badge variant="neutral">{city.region}</Badge>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/#download"
-              className="rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark"
-            >
-              Search PGs in {city.name} →
-            </Link>
-            <Link
-              href="/#list-your-pg"
-              className="rounded-lg border-2 border-brand-black px-6 py-3 text-sm font-semibold text-brand-black transition-colors hover:bg-brand-black hover:text-white"
-            >
+            <Button href="/#download">Search PGs in {city.name} →</Button>
+            <Button href="/#list-your-pg" variant="outline">
               List Your PG in {city.name}
-            </Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      <section className="bg-black/2 py-14">
+      <section className="bg-surface-muted py-14">
         <div className="container-page">
-          <h2 className="text-2xl font-extrabold tracking-tight text-brand-black">
-            Popular Localities in {city.name}
-          </h2>
+          <SectionHeading align="left">Popular Localities in {city.name}</SectionHeading>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {city.localities.map((locality) => (
-              <div
-                key={locality}
-                className="rounded-xl border border-black/10 bg-white px-5 py-4"
-              >
+              <Card key={locality} padding="sm">
                 <p className="font-semibold text-brand-black">
                   PG in {locality}, {city.name}
                 </p>
                 <p className="mt-1 text-sm text-brand-black/55">
                   Verified rooms with real photos & transparent pricing.
                 </p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -124,36 +112,14 @@ export function CityPageContent({ slug }: { slug: string }) {
 
       <section className="bg-white py-14">
         <div className="container-page">
-          <h2 className="text-2xl font-extrabold tracking-tight text-brand-black">
-            Frequently Asked Questions — PG in {city.name}
-          </h2>
-          <div className="mx-auto mt-6 max-w-2xl space-y-3">
-            {cityFaqs.map((faq) => (
-              <details
-                key={faq.question}
-                className="group rounded-xl border border-black/10 bg-white p-5 open:border-brand-red/40"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-brand-black">
-                  {faq.question}
-                  <span
-                    className="shrink-0 text-brand-red transition-transform group-open:rotate-45"
-                    aria-hidden="true"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-brand-black/65">{faq.answer}</p>
-              </details>
-            ))}
-          </div>
+          <SectionHeading align="left">Frequently Asked Questions — PG in {city.name}</SectionHeading>
+          <FaqList faqs={cityFaqs} className="mx-auto mt-6 max-w-2xl" />
         </div>
       </section>
 
-      <section className="bg-black/2 py-14">
+      <section className="bg-surface-muted py-14">
         <div className="container-page">
-          <h2 className="text-2xl font-extrabold tracking-tight text-brand-black">
-            Explore Other Cities
-          </h2>
+          <SectionHeading align="left">Explore Other Cities</SectionHeading>
           <div className="mt-6 flex flex-wrap gap-3">
             {cities
               .filter((c) => c.slug !== city.slug)
@@ -161,7 +127,7 @@ export function CityPageContent({ slug }: { slug: string }) {
                 <Link
                   key={c.slug}
                   href={`/pg-in-${c.slug}`}
-                  className="rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-medium text-brand-black transition-colors hover:border-brand-red hover:text-brand-red"
+                  className="rounded-lg border border-border bg-white px-4 py-2 text-sm font-medium text-brand-black transition-colors hover:border-brand-red hover:text-brand-red"
                 >
                   PG in {c.name}
                 </Link>
