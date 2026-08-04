@@ -1,0 +1,39 @@
+import Link from "next/link";
+import { cities } from "@/lib/cities";
+
+export function Cities() {
+  return (
+    <section id="cities" className="bg-white py-16 lg:py-24">
+      <div className="container-page">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-extrabold tracking-tight text-brand-black sm:text-4xl">
+            Best PG Accommodations Across India
+          </h2>
+          <p className="mt-4 text-brand-black/65">
+            Explore verified PGs in your city with hyperlocal search and real pricing.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cities.map((city) => (
+            <Link
+              key={city.slug}
+              href={`/pg-in-${city.slug}`}
+              className="group flex items-center justify-between rounded-xl border border-black/10 bg-white px-5 py-4 transition-colors hover:border-brand-red"
+            >
+              <div>
+                <p className="font-semibold text-brand-black group-hover:text-brand-red">
+                  PG in {city.name}
+                </p>
+                <p className="text-xs text-brand-black/50">{city.pgCount} verified PGs</p>
+              </div>
+              <span className="text-brand-red transition-transform group-hover:translate-x-1" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
