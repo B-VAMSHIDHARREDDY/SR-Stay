@@ -1,8 +1,10 @@
 "use client";
 
 import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE } from "@/lib/motion";
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   label?: string;
@@ -71,15 +73,33 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           </button>
         )}
       </div>
-      {error ? (
-        <p id={`${inputId}-error`} className="text-caption mt-1.5 text-error">
-          {error}
-        </p>
-      ) : helperText ? (
-        <p id={`${inputId}-helper`} className="text-caption mt-1.5 text-brand-black/50">
-          {helperText}
-        </p>
-      ) : null}
+      <AnimatePresence mode="wait" initial={false}>
+        {error ? (
+          <motion.p
+            key="error"
+            id={`${inputId}-error`}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: DURATION.fast, ease: EASE }}
+            className="text-caption mt-1.5 text-error"
+          >
+            {error}
+          </motion.p>
+        ) : helperText ? (
+          <motion.p
+            key="helper"
+            id={`${inputId}-helper`}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: DURATION.fast, ease: EASE }}
+            className="text-caption mt-1.5 text-brand-black/50"
+          >
+            {helperText}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 });

@@ -1,7 +1,11 @@
+"use client";
+
+import { motion } from "motion/react";
 import { ClipboardList, LayoutDashboard, Banknote, Users, TrendingUp } from "lucide-react";
 import { FeatureCard } from "@/components/feature-card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
+import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
 
 const features = [
   {
@@ -39,11 +43,19 @@ export function OwnerFeatures() {
       <div className="container-page">
         <SectionHeading>Own a PG? Reach More Tenants, Manage Everything in One App</SectionHeading>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={viewportOnce}
+          className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {features.map((f) => (
-            <FeatureCard key={f.title} {...f} />
+            <motion.div key={f.title} variants={staggerItem}>
+              <FeatureCard {...f} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="mt-10 text-center">
           <Button href="#download" variant="outline">

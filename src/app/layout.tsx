@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { MotionConfig } from "motion/react";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/site-config";
 import { ToastProvider } from "@/components/ui/Toast";
+import { PageTransition } from "@/components/page-transition";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -64,11 +66,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <JsonLd data={mobileApplicationJsonLd} />
-        <ToastProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </ToastProvider>
+        <MotionConfig reducedMotion="user">
+          <ToastProvider>
+            <Navbar />
+            <main className="flex-1">
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer />
+          </ToastProvider>
+        </MotionConfig>
       </body>
     </html>
   );

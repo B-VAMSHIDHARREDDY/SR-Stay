@@ -1,15 +1,20 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE, fadeIn } from "@/lib/motion";
 
 export interface SidebarItem {
   id: string;
   label: string;
   icon: LucideIcon;
 }
+
+const COLLAPSED_WIDTH = 80;
+const EXPANDED_WIDTH = 256;
 
 export function Sidebar({
   items,
@@ -72,11 +77,10 @@ export function Sidebar({
         <Menu className="h-5 w-5" aria-hidden="true" />
       </button>
 
-      <aside
-        className={cn(
-          "hidden shrink-0 flex-col border-r border-border bg-white py-4 transition-[width] duration-200 lg:flex",
-          collapsed ? "w-20" : "w-64",
-        )}
+      <motion.aside
+        animate={{ width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }}
+        transition={{ duration: DURATION.base, ease: EASE }}
+        className="hidden shrink-0 flex-col overflow-hidden border-r border-border bg-white py-4 lg:flex"
       >
         <div className="flex items-center justify-between px-4 pb-4">
           {!collapsed && header}
@@ -91,36 +95,42 @@ export function Sidebar({
           </button>
         </div>
         {renderNav(!collapsed)}
-      </aside>
+      </motion.aside>
 
-      <div
-        inert={!mobileOpen}
-        className={cn(
-          "fixed inset-0 z-100 transition-opacity duration-200 lg:hidden",
-          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
-        )}
-      >
-        <div onClick={() => setMobileOpen(false)} aria-hidden="true" className="absolute inset-0 bg-brand-black/50" />
-        <aside
-          className={cn(
-            "absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white py-4 shadow-lg transition-transform duration-200",
-            mobileOpen ? "translate-x-0" : "-translate-x-full",
-          )}
-        >
-          <div className="flex items-center justify-between px-4 pb-4">
-            {header}
-            <button
-              type="button"
-              onClick={() => setMobileOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-black/60 hover:bg-black/5"
-              aria-label="Close sidebar"
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            variants={fadeIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 z-100 bg-brand-black/50 lg:hidden"
+          >
+            <motion.aside
+              onClick={(e) => e.stopPropagation()}
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: DURATION.base, ease: EASE }}
+              className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white py-4 shadow-lg"
             >
-              <X className="h-4 w-4" aria-hidden="true" />
-            </button>
-          </div>
-          {renderNav(true)}
-        </aside>
-      </div>
+              <div className="flex items-center justify-between px-4 pb-4">
+                {header}
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-black/60 hover:bg-black/5"
+                  aria-label="Close sidebar"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+              {renderNav(true)}
+            </motion.aside>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

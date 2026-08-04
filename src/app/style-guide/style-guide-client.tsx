@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { motion } from "motion/react";
 import {
   Home,
   LayoutDashboard,
@@ -14,6 +15,7 @@ import {
 import { cities } from "@/lib/cities";
 import { faqs } from "@/lib/faqs";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE, staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
@@ -30,6 +32,7 @@ import { Sidebar, type SidebarItem } from "@/components/ui/Sidebar";
 import { FilterBar, type FilterGroup } from "@/components/ui/FilterBar";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { FadeImage } from "@/components/ui/FadeImage";
 
 function Section({
   id,
@@ -208,6 +211,54 @@ export function StyleGuideClient() {
             <p className="text-label font-medium text-brand-black/80">Label — City / Locality</p>
             <p className="text-caption text-brand-black/55">Caption — 10,000+ verified PGs across India</p>
           </div>
+        </Section>
+
+        <Section
+          id="motion"
+          title="Motion"
+          description="Every animation in the app shares this timing and easing — fade, slide, and slight-scale only. Motion's reducedMotion=&quot;user&quot; (set app-wide in the root layout) automatically disables transform-based motion for anyone with prefers-reduced-motion enabled, and page transitions/list reveals below only fire on real navigation and scroll, not in this static preview."
+        >
+          <div className="grid gap-8 sm:grid-cols-2">
+            <div>
+              <p className="text-label mb-3 font-semibold text-brand-black/70">Duration &amp; easing tokens</p>
+              <div className="space-y-1.5 rounded-2xl border border-border bg-surface-muted p-4 font-mono text-xs text-brand-black/70">
+                <p>fast · {DURATION.fast * 1000}ms</p>
+                <p>base · {DURATION.base * 1000}ms</p>
+                <p>slow · {DURATION.slow * 1000}ms</p>
+                <p>ease · cubic-bezier({EASE.join(", ")})</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-label mb-3 font-semibold text-brand-black/70">Fade-in image loading</p>
+              <FadeImage
+                src="/logo-icon.png"
+                alt=""
+                width={96}
+                height={96}
+                className="rounded-2xl border border-border"
+                wrapperClassName="block w-fit"
+              />
+            </div>
+          </div>
+
+          <p className="text-label mt-8 mb-3 font-semibold text-brand-black/70">
+            Scroll-reveal stagger — scroll this into view to trigger it
+          </p>
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="animate"
+            viewport={viewportOnce}
+            className="grid gap-4 sm:grid-cols-4"
+          >
+            {[1, 2, 3, 4].map((i) => (
+              <motion.div key={i} variants={staggerItem}>
+                <Card padding="sm" className="text-center">
+                  <p className="text-sm font-semibold text-brand-black">Item {i}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
         </Section>
 
         <Section id="buttons" title="Buttons" description="Six variants × three sizes, with loading and disabled states.">

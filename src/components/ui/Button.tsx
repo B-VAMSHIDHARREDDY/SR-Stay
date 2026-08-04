@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "motion/react";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE } from "@/lib/motion";
 
 export type ButtonVariant =
   | "primary"
@@ -24,8 +26,19 @@ type OwnProps = {
   children: ReactNode;
 };
 
-type AsButton = OwnProps & ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
-type AsLink = OwnProps & AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+/** Motion redefines these DOM event handlers with its own (PanInfo-based) signatures. */
+type MotionConflictingProps =
+  | "onDrag"
+  | "onDragStart"
+  | "onDragEnd"
+  | "onAnimationStart"
+  | "onAnimationEnd"
+  | "onAnimationIteration";
+
+type AsButton = OwnProps &
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, MotionConflictingProps> & { href?: undefined };
+type AsLink = OwnProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, MotionConflictingProps> & { href: string };
 
 export type ButtonProps = AsButton | AsLink;
 
@@ -48,9 +61,25 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: "h-12 gap-2 px-7 text-base",
 };
 
+const MotionLink = motion.create(Link);
+
+/** Subtle tactile feedback — only applied while the button is interactive. */
+const tapHover = {
+  whileHover: { scale: 1.02 },
+  whileTap: { scale: 0.98 },
+  transition: { duration: DURATION.fast, ease: EASE },
+};
+
 function Spinner() {
   return (
-    <svg className="h-4 w-4 shrink-0 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <motion.svg
+      className="h-4 w-4 shrink-0"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      animate={{ rotate: 360 }}
+      transition={{ duration: 0.6, repeat: Infinity, ease: "linear" }}
+    >
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
       <path
         className="opacity-90"
@@ -59,7 +88,7 @@ function Spinner() {
         strokeWidth="3"
         strokeLinecap="round"
       />
-    </svg>
+    </motion.svg>
   );
 }
 
@@ -91,23 +120,34 @@ export function Button({
   );
 
   if (rest.href) {
-    const { href, ...anchorRest } = rest as AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+    const { href, ...anchorRest } = rest as Omit<
+      AnchorHTMLAttributes<HTMLAnchorElement>,
+      MotionConflictingProps
+    > & { href: string };
     return (
-      <Link href={href} className={classes} aria-disabled={loading || undefined} {...anchorRest}>
+      <MotionLink
+        href={href}
+        className={classes}
+        aria-disabled={loading || undefined}
+        {...(!loading ? tapHover : {})}
+        {...anchorRest}
+      >
         {content}
-      </Link>
+      </MotionLink>
     );
   }
 
-  const buttonRest = rest as ButtonHTMLAttributes<HTMLButtonElement>;
+  const buttonRest = rest as Omit<ButtonHTMLAttributes<HTMLButtonElement>, MotionConflictingProps>;
+  const isDisabled = loading || buttonRest.disabled;
   return (
-    <button
+    <motion.button
       type={buttonRest.type ?? "button"}
       className={classes}
-      disabled={loading || buttonRest.disabled}
+      disabled={isDisabled}
+      {...(!isDisabled ? tapHover : {})}
       {...buttonRest}
     >
       {content}
-    </button>
+    </motion.button>
   );
 }

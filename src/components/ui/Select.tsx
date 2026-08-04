@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Check, ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE, dropdownPanel } from "@/lib/motion";
 
 export interface SelectOption {
   value: string;
@@ -166,74 +168,79 @@ export function Select({
         <span className={cn("flex-1 truncate", !selected && "text-brand-black/40")}>
           {selected ? selected.label : placeholder}
         </span>
-        <ChevronDown
-          className={cn(
-            "h-4 w-4 shrink-0 text-brand-black/50 transition-transform duration-200",
-            open && "rotate-180",
-          )}
-          aria-hidden="true"
-        />
+        <motion.span
+          className="shrink-0 text-brand-black/50"
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: DURATION.fast, ease: EASE }}
+        >
+          <ChevronDown className="h-4 w-4" aria-hidden="true" />
+        </motion.span>
       </button>
 
-      <div
-        className={cn(
-          "absolute z-50 mt-2 w-full origin-top rounded-2xl border border-border bg-white p-2 shadow-lg transition-all duration-150",
-          open ? "visible translate-y-0 scale-100 opacity-100" : "invisible -translate-y-1 scale-95 opacity-0",
-        )}
-      >
-        {searchable && (
-          <div className="mb-2 flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-            <Search className="h-4 w-4 shrink-0 text-brand-black/40" aria-hidden="true" />
-            <input
-              ref={searchRef}
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setActiveIndex(0);
-              }}
-              onKeyDown={handleListKeyDown}
-              placeholder="Search…"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-brand-black/40"
-            />
-          </div>
-        )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            variants={dropdownPanel}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="absolute z-50 mt-2 w-full origin-top rounded-2xl border border-border bg-white p-2 shadow-lg"
+          >
+            {searchable && (
+              <div className="mb-2 flex items-center gap-2 rounded-lg border border-border px-3 py-2">
+                <Search className="h-4 w-4 shrink-0 text-brand-black/40" aria-hidden="true" />
+                <input
+                  ref={searchRef}
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setActiveIndex(0);
+                  }}
+                  onKeyDown={handleListKeyDown}
+                  placeholder="Search…"
+                  className="w-full bg-transparent text-sm outline-none placeholder:text-brand-black/40"
+                />
+              </div>
+            )}
 
-        <ul
-          ref={listRef}
-          role="listbox"
-          tabIndex={searchable ? -1 : 0}
-          aria-activedescendant={activeIndex >= 0 ? `${id}-opt-${activeIndex}` : undefined}
-          onKeyDown={!searchable ? handleListKeyDown : undefined}
-          className="ui-scrollbar max-h-60 space-y-0.5 overflow-y-auto"
-        >
-          {filtered.length === 0 && (
-            <li className="px-3 py-6 text-center text-sm text-brand-black/45">{emptyMessage}</li>
-          )}
-          {filtered.map((opt, i) => {
-            const isSelected = opt.value === value;
-            const isActive = i === activeIndex;
-            return (
-              <li
-                key={opt.value}
-                id={`${id}-opt-${i}`}
-                role="option"
-                aria-selected={isSelected}
-                onMouseEnter={() => setActiveIndex(i)}
-                onClick={() => selectIndex(i)}
-                className={cn(
-                  "flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors",
-                  isActive && "bg-brand-red/8",
-                  isSelected ? "font-semibold text-brand-red" : "text-brand-black",
-                )}
-              >
-                {opt.icon && <span className="shrink-0">{opt.icon}</span>}
-                <span className="flex-1 truncate">{opt.label}</span>
-                {isSelected && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+            <ul
+              ref={listRef}
+              role="listbox"
+              tabIndex={searchable ? -1 : 0}
+              aria-activedescendant={activeIndex >= 0 ? `${id}-opt-${activeIndex}` : undefined}
+              onKeyDown={!searchable ? handleListKeyDown : undefined}
+              className="ui-scrollbar max-h-60 space-y-0.5 overflow-y-auto"
+            >
+              {filtered.length === 0 && (
+                <li className="px-3 py-6 text-center text-sm text-brand-black/45">{emptyMessage}</li>
+              )}
+              {filtered.map((opt, i) => {
+                const isSelected = opt.value === value;
+                const isActive = i === activeIndex;
+                return (
+                  <li
+                    key={opt.value}
+                    id={`${id}-opt-${i}`}
+                    role="option"
+                    aria-selected={isSelected}
+                    onMouseEnter={() => setActiveIndex(i)}
+                    onClick={() => selectIndex(i)}
+                    className={cn(
+                      "flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                      isActive && "bg-brand-red/8",
+                      isSelected ? "font-semibold text-brand-red" : "text-brand-black",
+                    )}
+                  >
+                    {opt.icon && <span className="shrink-0">{opt.icon}</span>}
+                    <span className="flex-1 truncate">{opt.label}</span>
+                    {isSelected && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
+                  </li>
+                );
+              })}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

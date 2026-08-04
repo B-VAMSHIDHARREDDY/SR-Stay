@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE, fadeIn } from "@/lib/motion";
 import { Badge } from "./Badge";
 import { Select, type SelectOption } from "./Select";
 
@@ -65,13 +67,20 @@ export function FilterBar({
         {activeEntries.length > 0 && <Badge variant="brand">{activeEntries.length}</Badge>}
       </button>
 
-      {activeEntries.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
+      {/* Always rendered (not gated on activeEntries.length) so a chip's exit
+          animation can complete even when it's the last one being removed. */}
+      <div className="flex flex-wrap items-center gap-2">
+        <AnimatePresence initial={false}>
           {activeEntries.map(({ group, value }) => {
             const option = group.options.find((o) => o.value === value);
             return (
-              <span
+              <motion.span
                 key={group.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: DURATION.fast, ease: EASE }}
                 className="flex items-center gap-1.5 rounded-lg bg-brand-red/10 py-1.5 pr-2 pl-3 text-xs font-semibold text-brand-red"
               >
                 {option?.label ?? value}
@@ -83,9 +92,11 @@ export function FilterBar({
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
-              </span>
+              </motion.span>
             );
           })}
+        </AnimatePresence>
+        {activeEntries.length > 0 && (
           <button
             type="button"
             onClick={() => groups.forEach((g) => onChange(g.id, ""))}
@@ -93,32 +104,43 @@ export function FilterBar({
           >
             Clear all
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
-      {sheetOpen && (
-        <div className="fixed inset-0 z-100 md:hidden">
-          <div
+      <AnimatePresence>
+        {sheetOpen && (
+          <motion.div
+            variants={fadeIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
             onClick={() => setSheetOpen(false)}
-            aria-hidden="true"
-            className="absolute inset-0 bg-brand-black/50"
-          />
-          <div className="absolute inset-x-0 bottom-0 rounded-t-2xl bg-white p-5 shadow-lg">
-            <div className="mb-4 flex items-center justify-between">
-              <p className="font-bold text-brand-black">Filters</p>
-              <button
-                type="button"
-                onClick={() => setSheetOpen(false)}
-                aria-label="Close filters"
-                className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-black/5"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="space-y-4">{renderFields()}</div>
-          </div>
-        </div>
-      )}
+            className="fixed inset-0 z-100 bg-brand-black/50 md:hidden"
+          >
+            <motion.div
+              onClick={(e) => e.stopPropagation()}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ duration: DURATION.base, ease: EASE }}
+              className="absolute inset-x-0 bottom-0 rounded-t-2xl bg-white p-5 shadow-lg"
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <p className="font-bold text-brand-black">Filters</p>
+                <button
+                  type="button"
+                  onClick={() => setSheetOpen(false)}
+                  aria-label="Close filters"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-black/5"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="space-y-4">{renderFields()}</div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

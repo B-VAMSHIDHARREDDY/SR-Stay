@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE } from "@/lib/motion";
 
 export interface AccordionItemData {
   id: string;
@@ -58,28 +60,31 @@ export function Accordion({
                 className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-semibold text-brand-black"
               >
                 {item.question}
-                <Plus
-                  className={cn(
-                    "h-4 w-4 shrink-0 text-brand-red transition-transform duration-200",
-                    open && "rotate-45",
-                  )}
-                  aria-hidden="true"
-                />
+                <motion.span
+                  className="shrink-0 text-brand-red"
+                  animate={{ rotate: open ? 45 : 0 }}
+                  transition={{ duration: DURATION.fast, ease: EASE }}
+                >
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                </motion.span>
               </button>
             </h3>
-            <div
-              id={`${item.id}-panel`}
-              role="region"
-              aria-labelledby={`${item.id}-trigger`}
-              className={cn(
-                "grid transition-[grid-template-rows] duration-300 ease-out",
-                open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+            <AnimatePresence initial={false}>
+              {open && (
+                <motion.div
+                  id={`${item.id}-panel`}
+                  role="region"
+                  aria-labelledby={`${item.id}-trigger`}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: DURATION.base, ease: EASE }}
+                  className="overflow-hidden"
+                >
+                  <p className="px-5 pb-4 text-sm leading-relaxed text-brand-black/65">{item.answer}</p>
+                </motion.div>
               )}
-            >
-              <div className="overflow-hidden">
-                <p className="px-5 pb-4 text-sm leading-relaxed text-brand-black/65">{item.answer}</p>
-              </div>
-            </div>
+            </AnimatePresence>
           </div>
         );
       })}

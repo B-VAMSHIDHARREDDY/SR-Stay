@@ -10,9 +10,11 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "motion/react";
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useIsClient } from "@/lib/useIsClient";
+import { toastSlide } from "@/lib/motion";
 
 export type ToastVariant = "success" | "warning" | "error" | "info";
 
@@ -69,12 +71,17 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: (id: strin
   const { icon: Icon, classes } = variantConfig[item.variant];
 
   return (
-    <div
+    <motion.div
+      layout
+      variants={toastSlide}
+      initial="initial"
+      animate="animate"
+      exit="exit"
       role="status"
       onMouseEnter={handlePause}
       onMouseLeave={schedule}
       className={cn(
-        "animate-toast-in pointer-events-auto flex w-full items-start gap-3 rounded-2xl border bg-white p-4 shadow-lg",
+        "pointer-events-auto flex w-full items-start gap-3 rounded-2xl border bg-white p-4 shadow-lg",
         classes,
       )}
     >
@@ -91,7 +98,7 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: (id: strin
       >
         <X className="h-4 w-4" aria-hidden="true" />
       </button>
-    </div>
+    </motion.div>
   );
 }
 
@@ -123,9 +130,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {mounted &&
         createPortal(
           <div className="pointer-events-none fixed bottom-4 right-4 left-4 z-100 flex flex-col items-end gap-3 sm:left-auto sm:w-full sm:max-w-sm">
-            {items.map((item) => (
-              <ToastCard key={item.id} item={item} onDismiss={dismiss} />
-            ))}
+            <AnimatePresence mode="popLayout">
+              {items.map((item) => (
+                <ToastCard key={item.id} item={item} onDismiss={dismiss} />
+              ))}
+            </AnimatePresence>
           </div>,
           document.body,
         )}

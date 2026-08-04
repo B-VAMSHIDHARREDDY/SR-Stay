@@ -1,5 +1,9 @@
+"use client";
+
+import { motion } from "motion/react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
+import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
 
 const testimonials = [
   {
@@ -24,16 +28,24 @@ export function Testimonials() {
       <div className="container-page">
         <SectionHeading>What Our Users Say</SectionHeading>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={viewportOnce}
+          className="mt-12 grid gap-5 lg:grid-cols-3"
+        >
           {testimonials.map((t) => (
-            <Card key={t.author}>
-              <blockquote className="text-sm leading-relaxed text-brand-black/75">
-                &ldquo;{t.quote}&rdquo;
-              </blockquote>
-              <p className="mt-4 text-sm font-semibold text-brand-red">— {t.author}</p>
-            </Card>
+            <motion.div key={t.author} variants={staggerItem}>
+              <Card>
+                <blockquote className="text-sm leading-relaxed text-brand-black/75">
+                  &ldquo;{t.quote}&rdquo;
+                </blockquote>
+                <p className="mt-4 text-sm font-semibold text-brand-red">— {t.author}</p>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

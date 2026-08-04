@@ -1,7 +1,9 @@
 "use client";
 
 import { cloneElement, isValidElement, useId, useRef, useState, type ReactElement, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE } from "@/lib/motion";
 
 const sideClasses = {
   top: "bottom-full left-1/2 mb-2 -translate-x-1/2",
@@ -41,17 +43,24 @@ export function Tooltip({
   return (
     <span className="relative inline-flex" onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}>
       {trigger}
-      <span
-        role="tooltip"
-        id={id}
-        className={cn(
-          "pointer-events-none absolute z-50 whitespace-nowrap rounded-lg bg-brand-black px-2.5 py-1.5 text-xs font-medium text-white shadow-md transition-all duration-150",
-          sideClasses[side],
-          open ? "scale-100 opacity-100" : "scale-95 opacity-0",
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            role="tooltip"
+            id={id}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: DURATION.fast, ease: EASE }}
+            className={cn(
+              "pointer-events-none absolute z-50 whitespace-nowrap rounded-lg bg-brand-black px-2.5 py-1.5 text-xs font-medium text-white shadow-md",
+              sideClasses[side],
+            )}
+          >
+            {content}
+          </motion.span>
         )}
-      >
-        {content}
-      </span>
+      </AnimatePresence>
     </span>
   );
 }

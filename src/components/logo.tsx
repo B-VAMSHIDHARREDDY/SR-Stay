@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 
 export function Logo({
   className = "",
@@ -14,12 +14,13 @@ export function Logo({
       aria-label="SR Stays home"
       className={`flex items-center gap-2 font-extrabold tracking-tight ${className}`}
     >
-      <Image
+      <FadeImage
         src="/logo-icon.png"
         alt=""
         width={36}
         height={36}
-        className="h-9 w-9 shrink-0 rounded-lg"
+        className="h-9 w-9 rounded-lg"
+        wrapperClassName="shrink-0"
         priority
       />
       <span className="text-xl leading-none">

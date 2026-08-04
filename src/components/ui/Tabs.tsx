@@ -1,7 +1,9 @@
 "use client";
 
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { motion } from "motion/react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE } from "@/lib/motion";
 
 export interface TabItem {
   id: string;
@@ -67,11 +69,18 @@ export function Tabs({
               onClick={() => setActiveId(item.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               className={cn(
-                "flex-1 rounded-md px-4 py-2 text-sm font-semibold transition-colors duration-200",
-                active ? "bg-white text-brand-black shadow-sm" : "text-brand-black/55 hover:text-brand-black",
+                "relative flex-1 rounded-md px-4 py-2 text-sm font-semibold transition-colors duration-200",
+                active ? "text-brand-black" : "text-brand-black/55 hover:text-brand-black",
               )}
             >
-              {item.label}
+              {active && (
+                <motion.span
+                  layoutId={`${baseId}-tab-indicator`}
+                  className="absolute inset-0 rounded-md bg-white shadow-sm"
+                  transition={{ duration: DURATION.base, ease: EASE }}
+                />
+              )}
+              <span className="relative z-10">{item.label}</span>
             </button>
           );
         })}

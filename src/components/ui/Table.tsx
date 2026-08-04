@@ -1,7 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE } from "@/lib/motion";
 import { Skeleton } from "./Skeleton";
 import { EmptyState } from "./EmptyState";
 
@@ -46,30 +48,41 @@ export function Table<T extends { id: string | number }>({
             </tr>
           </thead>
           <tbody>
-            {loading &&
-              Array.from({ length: skeletonRows }).map((_, i) => (
-                <tr key={i} className="border-b border-border last:border-0">
-                  {columns.map((col) => (
-                    <td key={col.key} className="px-5 py-4">
-                      <Skeleton className="h-4 w-full max-w-40" />
-                    </td>
+            <AnimatePresence mode="popLayout" initial={false}>
+              {loading
+                ? Array.from({ length: skeletonRows }).map((_, i) => (
+                    <motion.tr
+                      key={`skeleton-${i}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: DURATION.fast, ease: EASE }}
+                      className="border-b border-border last:border-0"
+                    >
+                      {columns.map((col) => (
+                        <td key={col.key} className="px-5 py-4">
+                          <Skeleton className="h-4 w-full max-w-40" />
+                        </td>
+                      ))}
+                    </motion.tr>
+                  ))
+                : data.map((row, i) => (
+                    <motion.tr
+                      key={row.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: DURATION.base, ease: EASE, delay: Math.min(i, 8) * 0.03 }}
+                      className="border-b border-border transition-colors last:border-0 hover:bg-surface-muted"
+                    >
+                      {columns.map((col) => (
+                        <td key={col.key} className={cn("px-5 py-4 text-brand-black/80", col.className)}>
+                          {col.render(row)}
+                        </td>
+                      ))}
+                    </motion.tr>
                   ))}
-                </tr>
-              ))}
-
-            {!loading &&
-              data.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b border-border transition-colors last:border-0 hover:bg-surface-muted"
-                >
-                  {columns.map((col) => (
-                    <td key={col.key} className={cn("px-5 py-4 text-brand-black/80", col.className)}>
-                      {col.render(row)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+            </AnimatePresence>
           </tbody>
         </table>
       </div>

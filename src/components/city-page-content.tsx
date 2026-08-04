@@ -7,9 +7,9 @@ import { faqs } from "@/lib/faqs";
 import { siteConfig } from "@/lib/site-config";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FaqList } from "@/components/faq-list";
+import { CityLocalitiesGrid } from "@/components/city-localities-grid";
 
 export function buildCityMetadata(slug: string): Metadata {
   const city = getCityBySlug(slug);
@@ -95,18 +95,7 @@ export function CityPageContent({ slug }: { slug: string }) {
       <section className="bg-surface-muted py-14">
         <div className="container-page">
           <SectionHeading align="left">Popular Localities in {city.name}</SectionHeading>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {city.localities.map((locality) => (
-              <Card key={locality} padding="sm">
-                <p className="font-semibold text-brand-black">
-                  PG in {locality}, {city.name}
-                </p>
-                <p className="mt-1 text-sm text-brand-black/55">
-                  Verified rooms with real photos & transparent pricing.
-                </p>
-              </Card>
-            ))}
-          </div>
+          <CityLocalitiesGrid localities={city.localities} cityName={city.name} />
         </div>
       </section>
 

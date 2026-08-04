@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./logo";
 import { Button } from "./ui/Button";
-import { cn } from "@/lib/cn";
+import { DURATION, EASE } from "@/lib/motion";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -45,39 +46,65 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-black transition-colors hover:bg-black/5 lg:hidden"
+          className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-black transition-colors hover:bg-black/5 lg:hidden"
           aria-label="Toggle menu"
           aria-expanded={open}
         >
-          {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          <AnimatePresence mode="wait" initial={false}>
+            {open ? (
+              <motion.span
+                key="close"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: DURATION.fast, ease: EASE }}
+                className="flex"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="menu"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: DURATION.fast, ease: EASE }}
+                className="flex"
+              >
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              </motion.span>
+            )}
+          </AnimatePresence>
         </button>
       </div>
 
-      <div
-        inert={!open}
-        className={cn(
-          "grid border-t border-black/5 bg-white transition-[grid-template-rows] duration-300 ease-out lg:hidden",
-          open ? "grid-rows-[1fr]" : "grid-rows-[0fr] border-transparent",
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: DURATION.base, ease: EASE }}
+            className="overflow-hidden border-t border-black/5 bg-white lg:hidden"
+          >
+            <nav className="container-page flex flex-col gap-1 py-3" aria-label="Mobile">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-md px-2 py-2.5 text-sm font-medium text-brand-black/80 transition-colors hover:bg-black/5 hover:text-brand-red"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Button href="/#download" onClick={() => setOpen(false)} className="mt-2 w-full">
+                Download App
+              </Button>
+            </nav>
+          </motion.div>
         )}
-      >
-        <div className="overflow-hidden">
-          <nav className="container-page flex flex-col gap-1 py-3" aria-label="Mobile">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-sm font-medium text-brand-black/80 transition-colors hover:bg-black/5 hover:text-brand-red"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Button href="/#download" onClick={() => setOpen(false)} className="mt-2 w-full">
-              Download App
-            </Button>
-          </nav>
-        </div>
-      </div>
+      </AnimatePresence>
     </header>
   );
 }
