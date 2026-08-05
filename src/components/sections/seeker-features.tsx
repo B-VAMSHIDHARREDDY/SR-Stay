@@ -5,7 +5,7 @@ import { Search, Home, IndianRupee, Star, Phone, MapPin } from "lucide-react";
 import { FeatureCard } from "@/components/feature-card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
-import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { bentoContainer, bentoItem, viewportOnce } from "@/lib/motion";
 
 const features = [
   {
@@ -46,20 +46,20 @@ const features = [
 
 export function SeekerFeatures() {
   return (
-    <section id="find-a-pg" className="bg-surface-muted py-16 lg:py-24">
+    <section id="find-a-pg" className="bg-cream py-16 lg:py-24">
       <div className="container-page">
-        <SectionHeading>Search, Compare & Move In — In Minutes</SectionHeading>
+        <SectionHeading eyebrow="For PG seekers">Search, Compare & Move In — In Minutes</SectionHeading>
 
         <motion.div
-          variants={staggerContainer}
+          variants={bentoContainer}
           initial="initial"
           whileInView="animate"
           viewport={viewportOnce}
           className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {features.map((f) => (
-            <motion.div key={f.title} variants={staggerItem}>
-              <FeatureCard {...f} />
+          {features.map((f, i) => (
+            <motion.div key={f.title} variants={bentoItem} className={i === 0 ? "sm:col-span-2" : undefined}>
+              <FeatureCard {...f} tone={i === 0 ? "gradient" : "light"} />
             </motion.div>
           ))}
         </motion.div>

@@ -46,8 +46,8 @@ export function Accordion({
           <div
             key={item.id}
             className={cn(
-              "rounded-2xl border bg-white transition-colors duration-200",
-              open ? "border-brand-red/40" : "border-border",
+              "rounded-3xl border bg-paper transition-[border-color,box-shadow] duration-200",
+              open ? "border-brand-red/30 shadow-md" : "border-border",
             )}
           >
             <h3 className="text-base">
@@ -57,11 +57,14 @@ export function Accordion({
                 aria-controls={`${item.id}-panel`}
                 id={`${item.id}-trigger`}
                 onClick={() => toggle(item.id)}
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-semibold text-brand-black"
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display font-semibold text-brand-black"
               >
                 {item.question}
                 <motion.span
-                  className="shrink-0 text-brand-red"
+                  className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-200",
+                    open ? "bg-gradient-ember text-white" : "bg-black/5 text-brand-black/60",
+                  )}
                   animate={{ rotate: open ? 45 : 0 }}
                   transition={{ duration: DURATION.fast, ease: EASE }}
                 >

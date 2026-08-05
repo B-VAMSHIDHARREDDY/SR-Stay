@@ -19,11 +19,18 @@ export function SectionHeading({
   return (
     <div className={cn(align === "center" && "mx-auto max-w-2xl text-center", className)}>
       {eyebrow && (
-        <p className="text-label mb-2 font-semibold uppercase tracking-wide text-brand-red">{eyebrow}</p>
+        <span
+          className={cn(
+            "text-label mb-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-semibold uppercase tracking-wide",
+            tone === "light" ? "bg-white/10 text-white/90" : "bg-brand-red/8 text-brand-red",
+          )}
+        >
+          {eyebrow}
+        </span>
       )}
       <h2
         className={cn(
-          "text-3xl font-extrabold tracking-tight sm:text-h2",
+          "font-display text-3xl font-semibold tracking-tight sm:text-h2",
           tone === "light" ? "text-white" : "text-brand-black",
         )}
       >

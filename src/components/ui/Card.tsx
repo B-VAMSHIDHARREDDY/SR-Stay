@@ -13,6 +13,13 @@ type MotionConflictingProps =
   | "onAnimationEnd"
   | "onAnimationIteration";
 
+const toneClasses = {
+  light: "border-border bg-paper shadow-sm",
+  dark: "border-white/10 bg-white/5 text-white",
+  gradient: "border-transparent bg-gradient-ember text-white shadow-glow-red",
+  ink: "border-transparent bg-gradient-ink text-white shadow-md",
+} as const;
+
 export function Card({
   hover = false,
   padding = "md",
@@ -23,7 +30,7 @@ export function Card({
 }: {
   hover?: boolean;
   padding?: "none" | "sm" | "md" | "lg";
-  tone?: "light" | "dark";
+  tone?: "light" | "dark" | "gradient" | "ink";
   className?: string;
   children: ReactNode;
 } & Omit<HTMLAttributes<HTMLDivElement>, MotionConflictingProps>) {
@@ -31,12 +38,12 @@ export function Card({
 
   return (
     <motion.div
-      whileHover={hover ? { y: -2 } : undefined}
+      whileHover={hover ? { y: -4 } : undefined}
       transition={{ duration: DURATION.fast, ease: EASE }}
       className={cn(
         "rounded-2xl border",
-        tone === "dark" ? "border-white/10 bg-white/5" : "border-border bg-white shadow-sm",
-        hover && "transition-shadow duration-200 hover:shadow-md",
+        toneClasses[tone],
+        hover && "transition-shadow duration-200 hover:shadow-lg",
         paddingClasses,
         className,
       )}

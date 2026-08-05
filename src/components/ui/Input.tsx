@@ -49,7 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           aria-invalid={!!error}
           aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
           className={cn(
-            "w-full rounded-lg border bg-white text-brand-black outline-none transition-colors placeholder:text-brand-black/40",
+            "w-full rounded-xl border bg-paper text-brand-black outline-none transition-colors placeholder:text-brand-black/40",
             sizeClasses[size],
             icon ? "pl-10 pr-3.5" : "px-3.5",
             isPassword && "pr-10",

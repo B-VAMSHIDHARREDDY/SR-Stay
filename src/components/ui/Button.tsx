@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { DURATION, EASE } from "@/lib/motion";
+import { magneticHover } from "@/lib/motion";
 
 export type ButtonVariant =
   | "primary"
@@ -43,12 +43,12 @@ type AsLink = OwnProps &
 export type ButtonProps = AsButton | AsLink;
 
 const baseClasses =
-  "inline-flex items-center justify-center rounded-lg font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-brand-red focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex items-center justify-center rounded-full font-semibold tracking-tight transition-[background-color,box-shadow,filter,color] duration-200 focus-visible:outline-2 focus-visible:outline-brand-red focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-brand-red text-white hover:bg-brand-red-dark",
-  secondary: "bg-brand-black text-white hover:bg-black/85",
-  outline: "border-2 border-brand-black text-brand-black hover:bg-brand-black hover:text-white",
+  primary: "bg-gradient-ember text-white shadow-glow-red hover:brightness-110",
+  secondary: "bg-gradient-ink text-white shadow-md hover:brightness-125",
+  outline: "border-2 border-brand-black/15 text-brand-black hover:border-brand-black hover:bg-brand-black hover:text-white",
   "outline-inverse": "border border-white/30 bg-white/5 text-white hover:bg-white/10",
   ghost: "text-brand-black hover:bg-black/5",
   danger: "bg-error text-white hover:bg-error-dark",
@@ -58,17 +58,13 @@ const variantClasses: Record<ButtonVariant, string> = {
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "h-9 gap-1.5 px-4 text-sm",
   md: "h-11 gap-2 px-6 text-sm",
-  lg: "h-12 gap-2 px-7 text-base",
+  lg: "h-13 gap-2 px-8 text-base",
 };
 
 const MotionLink = motion.create(Link);
 
 /** Subtle tactile feedback — only applied while the button is interactive. */
-const tapHover = {
-  whileHover: { scale: 1.02 },
-  whileTap: { scale: 0.98 },
-  transition: { duration: DURATION.fast, ease: EASE },
-};
+const tapHover = magneticHover;
 
 function Spinner() {
   return (

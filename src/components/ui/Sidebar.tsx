@@ -44,9 +44,9 @@ export function Sidebar({
                 setMobileOpen(false);
               }}
               className={cn(
-                "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                 active
-                  ? "bg-brand-red/10 text-brand-red"
+                  ? "bg-brand-red/8 text-brand-red"
                   : "text-brand-black/65 hover:bg-black/5 hover:text-brand-black",
               )}
             >
@@ -80,7 +80,7 @@ export function Sidebar({
       <motion.aside
         animate={{ width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }}
         transition={{ duration: DURATION.base, ease: EASE }}
-        className="hidden shrink-0 flex-col overflow-hidden border-r border-border bg-white py-4 lg:flex"
+        className="hidden shrink-0 flex-col overflow-hidden border-r border-border bg-paper py-4 lg:flex"
       >
         <div className="flex items-center justify-between px-4 pb-4">
           {!collapsed && header}
@@ -113,7 +113,7 @@ export function Sidebar({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: DURATION.base, ease: EASE }}
-              className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white py-4 shadow-lg"
+              className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-paper py-4 shadow-lg"
             >
               <div className="flex items-center justify-between px-4 pb-4">
                 {header}

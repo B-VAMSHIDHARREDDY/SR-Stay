@@ -103,17 +103,17 @@ export function Modal({
             aria-labelledby={titleId}
             aria-describedby={description ? descId : undefined}
             tabIndex={-1}
-            className={cn("relative w-full rounded-2xl bg-white p-6 shadow-lg", sizeClasses[size], className)}
+            className={cn("relative w-full rounded-3xl bg-paper p-6 shadow-lg", sizeClasses[size], className)}
           >
             <button
               type="button"
               onClick={onClose}
               aria-label="Close dialog"
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-brand-black/50 transition-colors hover:bg-black/5 hover:text-brand-black"
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-brand-black/50 transition-colors hover:bg-black/5 hover:text-brand-black"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
-            <h2 id={titleId} className="text-h4 pr-8 font-bold text-brand-black">
+            <h2 id={titleId} className="font-display text-h4 pr-8 font-bold text-brand-black">
               {title}
             </h2>
             {description && (

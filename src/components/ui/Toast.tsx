@@ -81,7 +81,7 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: (id: strin
       onMouseEnter={handlePause}
       onMouseLeave={schedule}
       className={cn(
-        "pointer-events-auto flex w-full items-start gap-3 rounded-2xl border bg-white p-4 shadow-lg",
+        "pointer-events-auto flex w-full items-start gap-3 rounded-2xl border bg-paper p-4 shadow-lg",
         classes,
       )}
     >

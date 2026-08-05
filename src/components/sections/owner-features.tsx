@@ -5,7 +5,7 @@ import { ClipboardList, LayoutDashboard, Banknote, Users, TrendingUp } from "luc
 import { FeatureCard } from "@/components/feature-card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
-import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { bentoContainer, bentoItem, viewportOnce } from "@/lib/motion";
 
 const features = [
   {
@@ -39,20 +39,22 @@ const features = [
 
 export function OwnerFeatures() {
   return (
-    <section id="list-your-pg" className="bg-white py-16 lg:py-24">
+    <section id="list-your-pg" className="bg-paper py-16 lg:py-24">
       <div className="container-page">
-        <SectionHeading>Own a PG? Reach More Tenants, Manage Everything in One App</SectionHeading>
+        <SectionHeading eyebrow="For PG owners">
+          Own a PG? Reach More Tenants, Manage Everything in One App
+        </SectionHeading>
 
         <motion.div
-          variants={staggerContainer}
+          variants={bentoContainer}
           initial="initial"
           whileInView="animate"
           viewport={viewportOnce}
           className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {features.map((f) => (
-            <motion.div key={f.title} variants={staggerItem}>
-              <FeatureCard {...f} />
+          {features.map((f, i) => (
+            <motion.div key={f.title} variants={bentoItem} className={i === 1 ? "sm:col-span-2" : undefined}>
+              <FeatureCard {...f} tone={i === 1 ? "ink" : "light"} />
             </motion.div>
           ))}
         </motion.div>

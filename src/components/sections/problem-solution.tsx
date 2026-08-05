@@ -17,22 +17,24 @@ const rows = [
 
 export function ProblemSolution() {
   return (
-    <section className="bg-white py-16 lg:py-24">
+    <section className="bg-cream py-16 lg:py-24">
       <div className="container-page">
-        <SectionHeading>Finding a Good PG Shouldn&apos;t Be This Hard</SectionHeading>
+        <SectionHeading eyebrow="The old way, fixed">
+          Finding a Good PG Shouldn&apos;t Be This Hard
+        </SectionHeading>
 
-        <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-border">
-          <div className="grid grid-cols-2 bg-brand-black text-sm font-semibold text-white">
-            <div className="px-5 py-3">Old Way</div>
-            <div className="px-5 py-3">With SR Stays</div>
+        <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-4xl border border-border shadow-sm">
+          <div className="bg-gradient-ink grid grid-cols-2 text-sm font-semibold text-white">
+            <div className="font-display px-5 py-4">Old Way</div>
+            <div className="font-display px-5 py-4">With SR Stays</div>
           </div>
           {rows.map((row, i) => (
             <div
               key={row.old}
-              className={`grid grid-cols-2 text-sm ${i % 2 === 0 ? "bg-white" : "bg-surface-muted"}`}
+              className={`grid grid-cols-2 text-sm ${i % 2 === 0 ? "bg-paper" : "bg-cream"}`}
             >
-              <div className="flex items-start gap-2 border-r border-border px-5 py-4 text-brand-black/60">
-                <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-brand-black/30" aria-hidden="true" />
+              <div className="flex items-start gap-2 border-r border-border px-5 py-4 text-brand-black/55">
+                <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-brand-black/25" aria-hidden="true" />
                 {row.old}
               </div>
               <div className="flex items-start gap-2 px-5 py-4 font-medium text-brand-black">

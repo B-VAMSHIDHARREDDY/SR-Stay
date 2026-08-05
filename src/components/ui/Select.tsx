@@ -159,7 +159,7 @@ export function Select({
           bare
             ? "bg-transparent"
             : cn(
-                "rounded-lg border bg-white px-3.5",
+                "rounded-xl border bg-paper px-3.5",
                 open ? "border-brand-red ring-2 ring-brand-red/15" : "border-border hover:border-brand-black/25",
               ),
         )}
@@ -184,7 +184,7 @@ export function Select({
             initial="initial"
             animate="animate"
             exit="exit"
-            className="absolute z-50 mt-2 w-full origin-top rounded-2xl border border-border bg-white p-2 shadow-lg"
+            className="glass-panel absolute z-50 mt-2 w-full origin-top rounded-2xl border border-border p-2 shadow-lg"
           >
             {searchable && (
               <div className="mb-2 flex items-center gap-2 rounded-lg border border-border px-3 py-2">

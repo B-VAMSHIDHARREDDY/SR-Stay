@@ -2,17 +2,33 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MapPin, Search, CheckCircle2, Home } from "lucide-react";
+import { motion } from "motion/react";
+import { MapPin, Search, Home, Star } from "lucide-react";
 import { cities } from "@/lib/cities";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
+import { useCountUp } from "@/lib/use-count-up";
 
 const trustStats = [
-  "10,000+ Verified PGs",
-  "50,000+ Happy Residents",
-  "Zero Brokerage",
-  "Available in 20+ Cities",
+  { value: 10000, suffix: "+", label: "Verified PGs" },
+  { value: 50000, suffix: "+", label: "Happy Residents" },
+  { value: 20, suffix: "+", label: "Cities" },
+  { value: 0, prefix: "₹", label: "Brokerage Fees" },
 ];
+
+function StatChip({ value, prefix = "", suffix = "", label }: { value: number; prefix?: string; suffix?: string; label: string }) {
+  const { ref, value: display } = useCountUp(value);
+  return (
+    <div ref={ref} className="rounded-2xl border border-black/8 bg-paper/70 px-4 py-3 backdrop-blur">
+      <p className="font-display text-xl font-bold text-brand-black sm:text-2xl">
+        {prefix}
+        {display.toLocaleString("en-IN")}
+        {suffix}
+      </p>
+      <p className="mt-0.5 text-xs font-medium text-brand-black/55">{label}</p>
+    </div>
+  );
+}
 
 export function Hero() {
   const router = useRouter();
@@ -24,27 +40,27 @@ export function Hero() {
   }
 
   return (
-    <section id="hero" className="relative overflow-hidden bg-white">
-      <div
-        className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand-red/5"
-        aria-hidden="true"
-      />
-      <div className="container-page relative grid gap-12 py-16 lg:grid-cols-2 lg:items-center lg:py-24">
+    <section id="hero" className="bg-mesh-light bg-grain relative overflow-hidden">
+      <div className="container-page relative z-10 grid gap-14 py-14 lg:grid-cols-2 lg:items-center lg:py-24">
         <div>
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-brand-black sm:text-h1">
-            Find the Best PG Near You — <span className="text-brand-red">Stay Comfort, Feel Home</span>
+          <span className="text-label inline-flex items-center gap-1.5 rounded-full bg-brand-red/8 px-3 py-1 font-semibold uppercase tracking-wide text-brand-red">
+            Stay Comfort · Feel Home
+          </span>
+          <h1 className="font-display mt-4 text-4xl font-semibold leading-[1.05] tracking-tight text-brand-black sm:text-h1">
+            Find the best PG near you —{" "}
+            <span className="text-gradient-ember">without the broker.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-brand-black/70">
-            Search verified Paying Guest (PG) accommodations, compare prices, view real
+          <p className="mt-5 max-w-xl text-lg text-brand-black/65">
+            Search verified Paying Guest accommodations, compare prices, view real
             photos, and book your stay — all in one smooth app. Built for PG seekers, PG
             owners, and PG maintenance — together.
           </p>
 
           <form
             onSubmit={handleSearch}
-            className="mt-8 flex flex-col gap-3 rounded-2xl border border-black/10 bg-white p-3 shadow-sm sm:flex-row sm:items-center"
+            className="glass-panel mt-8 flex flex-col gap-2 rounded-3xl border border-black/8 p-2.5 shadow-lg transition-shadow duration-200 focus-within:shadow-xl sm:flex-row sm:items-center sm:rounded-full"
           >
-            <div className="flex-1">
+            <div className="flex-1 sm:pl-2">
               <Select
                 label="City / locality"
                 hideLabel
@@ -56,7 +72,7 @@ export function Hero() {
               />
             </div>
             <div className="hidden h-8 w-px bg-black/10 sm:block" aria-hidden="true" />
-            <Button type="submit" icon={<Search className="h-4 w-4" strokeWidth={2.5} />}>
+            <Button type="submit" className="rounded-full" icon={<Search className="h-4 w-4" strokeWidth={2.5} />}>
               Search PG
             </Button>
           </form>
@@ -68,43 +84,58 @@ export function Hero() {
             </Button>
           </div>
 
-          <dl className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {trustStats.map((stat) => (
-              <div key={stat} className="flex items-center gap-1.5 text-sm font-medium text-brand-black/80">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-red" aria-hidden="true" />
-                {stat}
-              </div>
+              <StatChip key={stat.label} {...stat} />
             ))}
-          </dl>
+          </div>
         </div>
 
         <div className="relative mx-auto w-full max-w-sm">
-          <div className="absolute inset-0 -z-10 rounded-[2.5rem] bg-brand-red/5" aria-hidden="true" />
-          <div className="rounded-[2.5rem] border border-black/10 bg-white p-4 shadow-xl">
-            <div className="overflow-hidden rounded-3xl bg-brand-black">
+          <div
+            className="absolute -inset-8 -z-10 rounded-[3rem] bg-gradient-ember opacity-20 blur-3xl"
+            aria-hidden="true"
+          />
+          <motion.div
+            className="animate-float rounded-[2.5rem] border border-black/8 bg-paper p-4 shadow-xl"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <div className="overflow-hidden rounded-[1.75rem] bg-gradient-ink">
               <div className="flex items-center justify-between px-5 py-4">
-                <span className="text-sm font-semibold text-white">SR Stays</span>
-                <span className="text-xs text-white/60">9:41</span>
+                <span className="font-display text-sm font-semibold text-white">SR Stays</span>
+                <span className="text-xs text-white/50">9:41</span>
               </div>
-              <div className="space-y-3 bg-white p-4">
+              <div className="space-y-3 bg-paper p-4">
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 rounded-xl border border-black/10 p-3"
+                    className="flex items-center gap-3 rounded-2xl border border-black/8 p-3 transition-shadow hover:shadow-md"
                   >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-red/10 text-brand-red">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-ember-soft text-brand-red">
                       <Home className="h-5 w-5" strokeWidth={2.25} aria-hidden="true" />
                     </div>
                     <div className="flex-1">
-                      <div className="h-2.5 w-3/4 rounded bg-brand-black/10" />
-                      <div className="mt-2 h-2 w-1/2 rounded bg-brand-black/10" />
+                      <div className="h-2.5 w-3/4 rounded-full bg-brand-black/10" />
+                      <div className="mt-2 h-2 w-1/2 rounded-full bg-brand-black/10" />
                     </div>
                     <span className="text-xs font-semibold text-brand-red">₹8,500</span>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: -8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            className="glass-panel absolute -right-4 -top-4 flex items-center gap-1.5 rounded-full border border-black/8 px-3.5 py-2 shadow-lg sm:-right-8"
+          >
+            <Star className="h-3.5 w-3.5 fill-amber text-amber" aria-hidden="true" />
+            <span className="text-xs font-bold text-brand-black">4.6 rated</span>
+          </motion.div>
         </div>
       </div>
     </section>

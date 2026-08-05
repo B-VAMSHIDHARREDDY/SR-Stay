@@ -60,7 +60,7 @@ export function FilterBar({
       <button
         type="button"
         onClick={() => setSheetOpen(true)}
-        className="flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-brand-black md:hidden"
+        className="flex items-center gap-2 rounded-full border border-border px-4 py-2.5 text-sm font-medium text-brand-black md:hidden"
       >
         <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
         Filters
@@ -81,7 +81,7 @@ export function FilterBar({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: DURATION.fast, ease: EASE }}
-                className="flex items-center gap-1.5 rounded-lg bg-brand-red/10 py-1.5 pr-2 pl-3 text-xs font-semibold text-brand-red"
+                className="flex items-center gap-1.5 rounded-full bg-brand-red/10 py-1.5 pr-2 pl-3 text-xs font-semibold text-brand-red"
               >
                 {option?.label ?? value}
                 <button
@@ -123,7 +123,7 @@ export function FilterBar({
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: DURATION.base, ease: EASE }}
-              className="absolute inset-x-0 bottom-0 rounded-t-2xl bg-white p-5 shadow-lg"
+              className="absolute inset-x-0 bottom-0 rounded-t-4xl bg-paper p-5 shadow-lg"
             >
               <div className="mb-4 flex items-center justify-between">
                 <p className="font-bold text-brand-black">Filters</p>

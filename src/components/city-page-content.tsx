@@ -65,18 +65,18 @@ export function CityPageContent({ slug }: { slug: string }) {
       <JsonLd data={localBusinessJsonLd} />
       <JsonLd data={faqJsonLd} />
 
-      <section className="bg-white py-16 lg:py-20">
-        <div className="container-page">
+      <section className="bg-mesh-light bg-grain relative overflow-hidden py-16 lg:py-20">
+        <div className="container-page relative z-10">
           <nav className="text-xs text-brand-black/50" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-red">Home</Link>
             <span className="mx-1.5">/</span>
             <span className="text-brand-black/70">PG in {city.name}</span>
           </nav>
 
-          <h1 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-brand-black sm:text-h1">
+          <h1 className="font-display mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-brand-black sm:text-h1">
             {city.heading}
           </h1>
-          <p className="mt-5 max-w-2xl text-lg text-brand-black/70">{city.intro}</p>
+          <p className="mt-5 max-w-2xl text-lg text-brand-black/65">{city.intro}</p>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Badge variant="brand">{city.pgCount} Verified PGs</Badge>
@@ -92,23 +92,27 @@ export function CityPageContent({ slug }: { slug: string }) {
         </div>
       </section>
 
-      <section className="bg-surface-muted py-14">
+      <section className="bg-cream-deep py-14">
         <div className="container-page">
-          <SectionHeading align="left">Popular Localities in {city.name}</SectionHeading>
+          <SectionHeading align="left" eyebrow="Neighborhoods">
+            Popular Localities in {city.name}
+          </SectionHeading>
           <CityLocalitiesGrid localities={city.localities} cityName={city.name} />
         </div>
       </section>
 
-      <section className="bg-white py-14">
+      <section className="bg-paper py-14">
         <div className="container-page">
-          <SectionHeading align="left">Frequently Asked Questions — PG in {city.name}</SectionHeading>
+          <SectionHeading align="left" eyebrow="FAQ">
+            Frequently Asked Questions — PG in {city.name}
+          </SectionHeading>
           <FaqList faqs={cityFaqs} className="mx-auto mt-6 max-w-2xl" />
         </div>
       </section>
 
-      <section className="bg-surface-muted py-14">
+      <section className="bg-cream-deep py-14">
         <div className="container-page">
-          <SectionHeading align="left">Explore Other Cities</SectionHeading>
+          <SectionHeading align="left" eyebrow="More cities">Explore Other Cities</SectionHeading>
           <div className="mt-6 flex flex-wrap gap-3">
             {cities
               .filter((c) => c.slug !== city.slug)
@@ -116,7 +120,7 @@ export function CityPageContent({ slug }: { slug: string }) {
                 <Link
                   key={c.slug}
                   href={`/pg-in-${c.slug}`}
-                  className="rounded-lg border border-border bg-white px-4 py-2 text-sm font-medium text-brand-black transition-colors hover:border-brand-red hover:text-brand-red"
+                  className="rounded-full border border-border bg-paper px-4 py-2 text-sm font-medium text-brand-black transition-colors hover:border-brand-red hover:text-brand-red"
                 >
                   PG in {c.name}
                 </Link>

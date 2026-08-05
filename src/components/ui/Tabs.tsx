@@ -50,7 +50,7 @@ export function Tabs({
       <div
         role="tablist"
         aria-label="Tabs"
-        className="flex items-center gap-1 rounded-lg border border-border bg-surface-muted p-1"
+        className="flex items-center gap-1 rounded-full border border-border bg-surface-muted p-1"
       >
         {items.map((item, index) => {
           const active = item.id === activeId;
@@ -69,14 +69,14 @@ export function Tabs({
               onClick={() => setActiveId(item.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               className={cn(
-                "relative flex-1 rounded-md px-4 py-2 text-sm font-semibold transition-colors duration-200",
-                active ? "text-brand-black" : "text-brand-black/55 hover:text-brand-black",
+                "relative flex-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200",
+                active ? "text-white" : "text-brand-black/55 hover:text-brand-black",
               )}
             >
               {active && (
                 <motion.span
                   layoutId={`${baseId}-tab-indicator`}
-                  className="absolute inset-0 rounded-md bg-white shadow-sm"
+                  className="absolute inset-0 rounded-full bg-gradient-ember shadow-glow-red"
                   transition={{ duration: DURATION.base, ease: EASE }}
                 />
               )}

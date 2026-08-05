@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import { MotionConfig } from "motion/react";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
@@ -9,8 +9,14 @@ import { siteConfig } from "@/lib/site-config";
 import { ToastProvider } from "@/components/ui/Toast";
 import { PageTransition } from "@/components/page-transition";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
 });
@@ -63,7 +69,7 @@ const mobileApplicationJsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${poppins.variable} h-full antialiased`}>
+    <html lang="en" className={`${bricolage.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <JsonLd data={mobileApplicationJsonLd} />
         <MotionConfig reducedMotion="user">

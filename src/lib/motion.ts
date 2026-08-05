@@ -74,3 +74,29 @@ export const toastSlide: Variants = {
   animate: { opacity: 1, y: 0, scale: 1, transition: { duration: DURATION.base, ease: EASE } },
   exit: { opacity: 0, x: 24, transition: { duration: DURATION.fast, ease: EASE } },
 };
+
+/** Bento grids: slightly larger rise + scale than staggerItem, for tiles of mixed size. */
+export const bentoContainer: Variants = {
+  initial: {},
+  animate: {
+    transition: { staggerChildren: 0.07, delayChildren: 0.04 },
+  },
+};
+
+export const bentoItem: Variants = {
+  initial: { opacity: 0, y: 18, scale: 0.98 },
+  animate: { opacity: 1, y: 0, scale: 1, transition: { duration: DURATION.slow, ease: EASE } },
+};
+
+/** Magnetic hover/tap feedback for primary CTAs — pairs with a glow shadow class. */
+export const magneticHover = {
+  whileHover: { scale: 1.03, y: -2 },
+  whileTap: { scale: 0.97 },
+  transition: { duration: DURATION.fast, ease: EASE },
+} as const;
+
+/** Card-style hover lift, slightly more pronounced than the default tap/hover scale. */
+export const cardHover = {
+  whileHover: { y: -4 },
+  transition: { duration: DURATION.base, ease: EASE },
+} as const;

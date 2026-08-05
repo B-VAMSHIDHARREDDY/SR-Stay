@@ -15,7 +15,7 @@ import {
 import { cities } from "@/lib/cities";
 import { faqs } from "@/lib/faqs";
 import { cn } from "@/lib/cn";
-import { DURATION, EASE, staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { DURATION, EASE, bentoContainer, bentoItem, viewportOnce } from "@/lib/motion";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
@@ -47,7 +47,7 @@ function Section({
 }) {
   return (
     <section id={id} className="border-b border-border py-12 first:pt-0 last:border-0">
-      <h2 className="text-h3 font-extrabold tracking-tight text-brand-black">{title}</h2>
+      <h2 className="font-display text-h3 font-semibold tracking-tight text-brand-black">{title}</h2>
       {description && <p className="mt-2 max-w-2xl text-sm text-brand-black/60">{description}</p>}
       <div className="mt-8">{children}</div>
     </section>
@@ -56,13 +56,24 @@ function Section({
 
 const colorSwatches: { name: string; className: string }[] = [
   { name: "brand-red", className: "bg-brand-red" },
-  { name: "brand-red-dark", className: "bg-brand-red-dark" },
-  { name: "brand-black", className: "bg-brand-black" },
+  { name: "ember", className: "bg-ember" },
+  { name: "amber", className: "bg-amber" },
+  { name: "plum", className: "bg-plum" },
+  { name: "brand-black (ink)", className: "bg-brand-black" },
+  { name: "cream", className: "border border-border bg-cream" },
+  { name: "cream-deep", className: "border border-border bg-cream-deep" },
+  { name: "paper", className: "border border-border bg-paper" },
   { name: "success", className: "bg-success" },
   { name: "warning", className: "bg-warning" },
   { name: "error", className: "bg-error" },
-  { name: "border", className: "border border-border bg-white" },
-  { name: "surface-muted", className: "bg-surface-muted" },
+  { name: "border", className: "border border-border bg-paper" },
+];
+
+const gradientSwatches: { name: string; className: string }[] = [
+  { name: "gradient-ember", className: "bg-gradient-ember" },
+  { name: "gradient-ink", className: "bg-gradient-ink" },
+  { name: "mesh-light", className: "bg-mesh-light" },
+  { name: "mesh-dark", className: "bg-mesh-dark" },
 ];
 
 interface BookingRow {
@@ -173,22 +184,22 @@ export function StyleGuideClient() {
   ];
 
   return (
-    <div className="bg-white">
-      <div className="border-b border-border bg-surface-muted py-14">
-        <div className="container-page">
+    <div className="bg-cream">
+      <div className="bg-mesh-light bg-grain border-b border-border py-14">
+        <div className="container-page relative z-10">
           <Badge variant="neutral">Internal — not indexed</Badge>
-          <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-brand-black sm:text-h1">
+          <h1 className="font-display mt-4 text-4xl font-semibold tracking-tight text-brand-black sm:text-h1">
             SR Stays Design System
           </h1>
           <p className="text-body mt-3 max-w-2xl text-brand-black/65">
-            Living reference for every token and component used across the app — colors, typography, radius,
-            elevation, and the full UI component library.
+            Living reference for every token and component used across the app — colors, gradients, typography,
+            radius, elevation, motion, and the full UI component library.
           </p>
         </div>
       </div>
 
       <div className="container-page">
-        <Section id="colors" title="Colors" description="Primary brand palette plus semantic success / warning / error tokens.">
+        <Section id="colors" title="Colors" description="Warm-neutral surfaces (cream/paper) plus the brand-red → ember → amber gradient ramp and a plum secondary accent.">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {colorSwatches.map((c) => (
               <div key={c.name}>
@@ -197,16 +208,26 @@ export function StyleGuideClient() {
               </div>
             ))}
           </div>
+          <p className="text-label mt-8 mb-3 font-semibold text-brand-black/70">Gradients & mesh backgrounds</p>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {gradientSwatches.map((g) => (
+              <div key={g.name}>
+                <div className={cn("h-16 rounded-xl", g.className)} />
+                <p className="mt-2 text-xs font-medium text-brand-black/70">{g.name}</p>
+              </div>
+            ))}
+          </div>
         </Section>
 
-        <Section id="typography" title="Typography" description="H1–H4, body, caption, and label scale.">
+        <Section id="typography" title="Typography" description="Bricolage Grotesque (font-display) for headings, Inter (font-sans) for body and UI text.">
           <div className="space-y-4">
-            <p className="text-4xl font-extrabold text-brand-black sm:text-h1">H1 — Find the Best PG</p>
-            <p className="text-3xl font-extrabold text-brand-black sm:text-h2">H2 — Search, Compare & Move In</p>
-            <p className="text-h3 font-bold text-brand-black">H3 — Popular Localities</p>
-            <p className="text-h4 font-bold text-brand-black">H4 — Verified Listings</p>
+            <p className="font-display text-display font-semibold text-brand-black">Display — Stay Comfort</p>
+            <p className="font-display text-4xl font-semibold text-brand-black sm:text-h1">H1 — Find the Best PG</p>
+            <p className="font-display text-3xl font-semibold text-brand-black sm:text-h2">H2 — Search, Compare & Move In</p>
+            <p className="font-display text-h3 font-bold text-brand-black">H3 — Popular Localities</p>
+            <p className="font-display text-h4 font-bold text-brand-black">H4 — Verified Listings</p>
             <p className="text-body text-brand-black/80">
-              Body — Search verified Paying Guest (PG) accommodations, compare prices, and book your stay.
+              Body (Inter) — Search verified Paying Guest (PG) accommodations, compare prices, and book your stay.
             </p>
             <p className="text-label font-medium text-brand-black/80">Label — City / Locality</p>
             <p className="text-caption text-brand-black/55">Caption — 10,000+ verified PGs across India</p>
@@ -242,17 +263,17 @@ export function StyleGuideClient() {
           </div>
 
           <p className="text-label mt-8 mb-3 font-semibold text-brand-black/70">
-            Scroll-reveal stagger — scroll this into view to trigger it
+            Bento scroll-reveal stagger — scroll this into view to trigger it
           </p>
           <motion.div
-            variants={staggerContainer}
+            variants={bentoContainer}
             initial="initial"
             whileInView="animate"
             viewport={viewportOnce}
             className="grid gap-4 sm:grid-cols-4"
           >
             {[1, 2, 3, 4].map((i) => (
-              <motion.div key={i} variants={staggerItem}>
+              <motion.div key={i} variants={bentoItem}>
                 <Card padding="sm" className="text-center">
                   <p className="text-sm font-semibold text-brand-black">Item {i}</p>
                 </Card>
@@ -301,20 +322,26 @@ export function StyleGuideClient() {
           </div>
         </Section>
 
-        <Section id="cards" title="Cards" description="One radius/padding/shadow definition, with an optional hover lift.">
-          <div className="grid gap-5 sm:grid-cols-3">
+        <Section id="cards" title="Cards" description="One radius/padding/shadow definition, four tones, with an optional hover lift.">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <Card hover>
-              <p className="font-bold text-brand-black">Static Card</p>
+              <p className="font-display font-bold text-brand-black">Light</p>
               <p className="mt-1.5 text-sm text-brand-black/60">Hover to see the elevation change.</p>
             </Card>
-            <Card hover padding="lg">
-              <p className="font-bold text-brand-black">Larger Padding</p>
-              <p className="mt-1.5 text-sm text-brand-black/60">padding=&quot;lg&quot;</p>
+            <Card hover tone="gradient">
+              <p className="font-display font-bold">Gradient</p>
+              <p className="mt-1.5 text-sm text-white/75">tone=&quot;gradient&quot;</p>
             </Card>
-            <Card tone="dark" className="bg-brand-black text-white">
-              <p className="font-bold">Dark Tone</p>
-              <p className="mt-1.5 text-sm text-white/60">tone=&quot;dark&quot;</p>
+            <Card hover tone="ink">
+              <p className="font-display font-bold">Ink</p>
+              <p className="mt-1.5 text-sm text-white/70">tone=&quot;ink&quot;</p>
             </Card>
+            <div className="rounded-2xl bg-brand-black p-1">
+              <Card tone="dark">
+                <p className="font-display font-bold">Dark</p>
+                <p className="mt-1.5 text-sm text-white/60">tone=&quot;dark&quot; — for use on a dark section</p>
+              </Card>
+            </div>
           </div>
         </Section>
 

@@ -5,7 +5,8 @@ import { Wrench, Receipt, CalendarDays, Bell, FileText } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { bentoContainer, bentoItem, viewportOnce } from "@/lib/motion";
+import { cn } from "@/lib/cn";
 
 const items = [
   {
@@ -38,32 +39,36 @@ const items = [
 
 export function Maintenance() {
   return (
-    <section id="maintenance" className="bg-brand-black py-16 text-white lg:py-24">
-      <div className="container-page">
+    <section id="maintenance" className="bg-mesh-dark bg-grain py-16 text-white lg:py-24">
+      <div className="container-page relative z-10">
         <SectionHeading
           tone="light"
+          eyebrow="PG Maintenance"
           description="SR Stays offers a dedicated PG Maintenance application, separate from the main search app, so owners and residents can manage day-to-day PG operations smoothly."
         >
-          PG Maintenance, Simplified — A Separate App Built Just for This
+          Maintenance, Simplified — A Separate App Built Just for This
         </SectionHeading>
 
         <motion.div
-          variants={staggerContainer}
+          variants={bentoContainer}
           initial="initial"
           whileInView="animate"
           viewport={viewportOnce}
           className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {items.map((item) => (
-            <motion.div key={item.title} variants={staggerItem}>
-              <Card tone="dark" className="h-full">
+          {items.map((item, i) => (
+            <motion.div key={item.title} variants={bentoItem} className={i === 2 ? "sm:col-span-2" : undefined}>
+              <Card tone="dark" hover className="h-full">
                 <div
-                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-red/20 text-brand-red"
+                  className={cn(
+                    "flex h-11 w-11 items-center justify-center rounded-xl",
+                    i === 2 ? "bg-amber/20 text-amber" : "bg-brand-red/20 text-brand-red",
+                  )}
                   aria-hidden="true"
                 >
                   <item.icon className="h-5 w-5" strokeWidth={2.25} />
                 </div>
-                <h3 className="text-h4 mt-4 font-bold">{item.title}</h3>
+                <h3 className="font-display text-h4 mt-4 font-bold">{item.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">{item.description}</p>
               </Card>
             </motion.div>

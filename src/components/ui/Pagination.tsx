@@ -27,7 +27,7 @@ export function Pagination({
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
         aria-label="Previous page"
-        className="flex h-9 w-9 items-center justify-center rounded-lg text-brand-black/60 transition-colors hover:bg-black/5 disabled:pointer-events-none disabled:opacity-30"
+        className="flex h-9 w-9 items-center justify-center rounded-full text-brand-black/60 transition-colors hover:bg-black/5 disabled:pointer-events-none disabled:opacity-30"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
       </button>
@@ -43,8 +43,8 @@ export function Pagination({
               onClick={() => onPageChange(p)}
               aria-current={p === page ? "page" : undefined}
               className={cn(
-                "flex h-9 w-9 items-center justify-center rounded-lg text-sm font-medium transition-colors",
-                p === page ? "bg-brand-red text-white" : "text-brand-black/70 hover:bg-black/5",
+                "flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-colors",
+                p === page ? "bg-gradient-ember text-white shadow-glow-red" : "text-brand-black/70 hover:bg-black/5",
               )}
             >
               {p}
@@ -58,7 +58,7 @@ export function Pagination({
         onClick={() => onPageChange(page + 1)}
         disabled={page === pageCount}
         aria-label="Next page"
-        className="flex h-9 w-9 items-center justify-center rounded-lg text-brand-black/60 transition-colors hover:bg-black/5 disabled:pointer-events-none disabled:opacity-30"
+        className="flex h-9 w-9 items-center justify-center rounded-full text-brand-black/60 transition-colors hover:bg-black/5 disabled:pointer-events-none disabled:opacity-30"
       >
         <ChevronRight className="h-4 w-4" aria-hidden="true" />
       </button>

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./logo";
 import { Button } from "./ui/Button";
 import { DURATION, EASE } from "@/lib/motion";
+import { cn } from "@/lib/cn";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -19,18 +20,40 @@ const navLinks = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 12);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
-      <div className="container-page flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
+      <div
+        className={cn(
+          "glass-panel container-page flex h-14 items-center justify-between rounded-full border border-black/5 px-4 transition-shadow duration-300 sm:h-16 sm:px-5",
+          scrolled ? "shadow-lg" : "shadow-sm",
+        )}
+      >
         <Logo />
 
-        <nav className="hidden lg:flex items-center gap-7" aria-label="Primary">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-brand-black/80 transition-colors hover:text-brand-red"
+              className="text-sm font-medium text-brand-black/75 transition-colors hover:text-brand-red"
             >
               {link.label}
             </Link>
@@ -46,7 +69,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-black transition-colors hover:bg-black/5 lg:hidden"
+          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-brand-black transition-colors hover:bg-black/5 lg:hidden"
           aria-label="Toggle menu"
           aria-expanded={open}
         >
@@ -78,29 +101,42 @@ export function Navbar() {
         </button>
       </div>
 
-      <AnimatePresence initial={false}>
+      <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: DURATION.base, ease: EASE }}
-            className="overflow-hidden border-t border-black/5 bg-white lg:hidden"
+            className="bg-mesh-dark bg-grain fixed inset-0 z-40 flex flex-col pt-24 pb-8 lg:hidden"
           >
-            <nav className="container-page flex flex-col gap-1 py-3" aria-label="Mobile">
-              {navLinks.map((link) => (
-                <Link
+            <nav className="container-page relative z-10 flex flex-1 flex-col gap-1" aria-label="Mobile">
+              {navLinks.map((link, i) => (
+                <motion.div
                   key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-md px-2 py-2.5 text-sm font-medium text-brand-black/80 transition-colors hover:bg-black/5 hover:text-brand-red"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: DURATION.base, ease: EASE, delay: 0.05 + i * 0.04 }}
                 >
-                  {link.label}
-                </Link>
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="font-display block rounded-2xl px-3 py-3.5 text-2xl font-semibold text-white/90 transition-colors hover:bg-white/5 hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
-              <Button href="/#download" onClick={() => setOpen(false)} className="mt-2 w-full">
-                Download App
-              </Button>
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: DURATION.base, ease: EASE, delay: 0.05 + navLinks.length * 0.04 }}
+                className="relative z-10 mt-auto pt-8"
+              >
+                <Button href="/#download" onClick={() => setOpen(false)} className="w-full">
+                  Download App
+                </Button>
+              </motion.div>
             </nav>
           </motion.div>
         )}

@@ -32,7 +32,7 @@ export function Table<T extends { id: string | number }>({
   className?: string;
 }) {
   return (
-    <div className={cn("overflow-hidden rounded-2xl border border-border bg-white shadow-sm", className)}>
+    <div className={cn("overflow-hidden rounded-2xl border border-border bg-paper shadow-sm", className)}>
       <div className="ui-scrollbar max-h-[28rem] overflow-auto">
         <table className="w-full border-collapse text-sm">
           <thead className="sticky top-0 z-10 bg-surface-muted">
