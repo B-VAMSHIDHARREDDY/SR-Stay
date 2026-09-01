@@ -126,6 +126,13 @@ To use it:
 `.github/workflows/ci.yml` runs lint, type-check, and build on every push and
 PR regardless of which deploy option you choose.
 
+## Deploying the backend to Render
+
+The FastAPI app in `backend/` deploys via the [`render.yaml`](./render.yaml)
+Blueprint at the repo root — see [`backend/README.md`](./backend/README.md#deploying-to-render)
+for the full walkthrough (env vars to set, migrations, wiring the deployed
+frontend to it).
+
 ## SEO notes
 
 - One `<h1>` per page, structured `<h2>`/`<h3>` hierarchy throughout
