@@ -19,6 +19,7 @@ class PGBase(BaseModel):
     images: list[str] = Field(default_factory=list)
     contact_phone: str = Field(min_length=6, max_length=20)
     description: str = ""
+    owner_id: uuid.UUID | None = None
     is_active: bool = True
 
 
@@ -39,6 +40,7 @@ class PGUpdate(BaseModel):
     images: list[str] | None = None
     contact_phone: str | None = Field(default=None, min_length=6, max_length=20)
     description: str | None = None
+    owner_id: uuid.UUID | None = None
     is_active: bool | None = None
 
 

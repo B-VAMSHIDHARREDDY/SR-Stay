@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.auth.models import AdminUser
 from app.auth.schemas import TokenResponse
-from app.auth.services import create_access_token
+from app.auth.services import create_access_token, get_current_admin
 from app.database import get_db
 from app.users import services
 from app.users.models import User
@@ -10,6 +11,15 @@ from app.users.schemas import UserLogin, UserOut, UserUpdate
 from app.users.services import get_current_user
 
 router = APIRouter(prefix="/api/users", tags=["users"])
+admin_router = APIRouter(prefix="/api/admin/users", tags=["admin"])
+
+
+@admin_router.get("", response_model=list[UserOut])
+def list_users(
+    db: Session = Depends(get_db),
+    _current_admin: AdminUser = Depends(get_current_admin),
+) -> list[User]:
+    return services.list_users(db)
 
 
 @router.post("/login", response_model=TokenResponse)

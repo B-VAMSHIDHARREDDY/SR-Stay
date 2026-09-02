@@ -14,6 +14,10 @@ from app.users.models import User
 bearer_scheme = HTTPBearer(auto_error=False)
 
 
+def list_users(db: Session) -> list[User]:
+    return list(db.execute(select(User).order_by(User.created_at.desc())).scalars().all())
+
+
 def get_or_create_user(db: Session, phone: str) -> User:
     user = db.scalar(select(User).where(User.phone == phone))
     if user is not None:

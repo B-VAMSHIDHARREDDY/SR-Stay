@@ -14,6 +14,7 @@ export interface PGListing {
   images: string[];
   contact_phone: string;
   description: string;
+  owner_id: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -38,6 +39,19 @@ export interface Amenity {
   id: string;
   name: string;
 }
+
+export interface Owner {
+  id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  notes: string;
+  pg_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type OwnerInput = Omit<Owner, "id" | "pg_count" | "created_at" | "updated_at">;
 
 export interface UserProfile {
   id: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/Input";
@@ -12,7 +12,10 @@ import { cities, getCityBySlug } from "@/lib/cities";
 import { ApiError } from "@/lib/api";
 import { createAmenity } from "@/lib/pg-api";
 import { useAmenities } from "@/lib/use-amenities";
-import type { Gender, PGListingInput } from "@/lib/types";
+import { listOwners } from "@/lib/owner-api";
+import type { Gender, Owner, PGListingInput } from "@/lib/types";
+
+const NO_OWNER = "";
 
 const cityOptions = cities.map((c) => ({ value: c.slug, label: c.name }));
 const genderOptions: { value: Gender; label: string }[] = [
@@ -96,7 +99,19 @@ export function PgListingForm({
   }
   const [contactPhone, setContactPhone] = useState(initial?.contact_phone ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [ownerId, setOwnerId] = useState(initial?.owner_id ?? NO_OWNER);
   const [isActive, setIsActive] = useState(initial?.is_active ?? true);
+
+  const [owners, setOwners] = useState<Owner[]>([]);
+  useEffect(() => {
+    listOwners().then(setOwners).catch(() => {
+      // Silent — the owner field just falls back to "No owner assigned".
+    });
+  }, []);
+  const ownerOptions = useMemo(
+    () => [{ value: NO_OWNER, label: "No owner assigned" }, ...owners.map((o) => ({ value: o.id, label: `${o.name} (${o.phone})` }))],
+    [owners],
+  );
 
   const localityOptions = useMemo(() => {
     const areas = getCityBySlug(city)?.localities ?? [];
@@ -124,6 +139,7 @@ export function PgListingForm({
         images: fromCsv(images),
         contact_phone: contactPhone,
         description,
+        owner_id: ownerId || null,
         is_active: isActive,
       });
       router.push("/admin/listings");
@@ -263,6 +279,7 @@ export function PgListingForm({
           value={contactPhone}
           onChange={(e) => setContactPhone(e.target.value)}
         />
+        <Select label="Owner" searchable options={ownerOptions} value={ownerId} onChange={setOwnerId} />
         <div className="w-full">
           <label className="text-label mb-1.5 block font-medium text-brand-black/80">Description</label>
           <textarea
