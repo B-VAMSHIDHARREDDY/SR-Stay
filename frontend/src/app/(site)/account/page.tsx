@@ -150,16 +150,14 @@ export default function AccountPage() {
 
   if (checking || !profile) {
     return (
-      <div className="bg-grain relative flex min-h-screen items-center justify-center">
-        <div aria-hidden="true" className="bg-mesh-light-bleed" />
+      <div className="bg-mesh-light bg-grain relative flex min-h-screen items-center justify-center">
         <Loader2 className="relative z-10 h-6 w-6 animate-spin text-brand-red" aria-hidden="true" />
       </div>
     );
   }
 
   return (
-    <section className="bg-grain relative min-h-screen py-10 sm:py-14">
-      <div aria-hidden="true" className="bg-mesh-light-bleed" />
+    <section className="bg-mesh-light bg-grain relative min-h-screen py-10 sm:py-14">
       <div className="container-page relative z-10 max-w-xl space-y-5">
         <h1 className="font-display px-1 text-2xl font-semibold tracking-tight text-brand-black sm:text-h3">
           My Account

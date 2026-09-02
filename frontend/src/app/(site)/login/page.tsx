@@ -76,16 +76,14 @@ export default function LoginPage() {
 
   if (checking) {
     return (
-      <section className="bg-grain relative flex min-h-screen items-center justify-center">
-        <div aria-hidden="true" className="bg-mesh-light-bleed" />
+      <section className="bg-mesh-light bg-grain relative flex min-h-screen items-center justify-center">
         <Loader2 className="relative z-10 h-6 w-6 animate-spin text-brand-red" aria-hidden="true" />
       </section>
     );
   }
 
   return (
-    <section className="bg-grain relative flex min-h-screen items-center justify-center px-4 py-12">
-      <div aria-hidden="true" className="bg-mesh-light-bleed" />
+    <section className="bg-mesh-light bg-grain relative flex min-h-screen items-center justify-center px-4 py-12">
       <div className="relative z-10 w-full max-w-sm">
         <Card padding="lg">
           <h1 className="font-display text-xl font-semibold tracking-tight text-brand-black">Log in</h1>

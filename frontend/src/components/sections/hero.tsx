@@ -29,8 +29,7 @@ function StatChip({ value, prefix = "", suffix = "", label }: { value: number; p
 
 export function Hero() {
   return (
-    <section id="hero" className="bg-grain relative overflow-hidden">
-      <div aria-hidden="true" className="bg-mesh-light-bleed" />
+    <section id="hero" className="bg-mesh-light bg-grain relative overflow-hidden">
       <div className="container-page relative z-10 grid gap-14 py-14 lg:grid-cols-2 lg:items-center lg:py-24">
         <div>
           <span className="text-label inline-flex items-center gap-1.5 rounded-full bg-brand-red/8 px-3 py-1 font-semibold uppercase tracking-wide text-brand-red">

@@ -243,40 +243,6 @@ textarea:focus-visible {
   background-image: var(--gradient-mesh-dark);
 }
 
-/* Extends a hero's mesh background up behind the fixed, floating navbar so
-   its glass blur picks up real page color instead of flat body background.
-   Apply to an absolutely-positioned first child of a `position: relative`
-   section in place of .bg-mesh-light/.bg-mesh-dark on the section itself.
-
-   Height is a fixed constant, NOT `bottom: 0` stretched to the section's own
-   height — gradient-mesh-light's blobs are positioned in percentages of
-   this box, so a variable height (a tall hero vs. a short search bar) would
-   sample a different part of the gradient on every page, making the header
-   strip a different color depending on what page it's floating over. A
-   shorter page just shows flat body color below the capped gradient, which
-   is fine: --background and --cream are the same value. */
-.bg-mesh-light-bleed {
-  position: absolute;
-  top: calc(var(--header-h) * -1);
-  left: 0;
-  right: 0;
-  height: 28rem;
-  z-index: -1;
-  background-color: var(--cream);
-  background-image: var(--gradient-mesh-light);
-}
-
-.bg-mesh-dark-bleed {
-  position: absolute;
-  top: calc(var(--header-h) * -1);
-  left: 0;
-  right: 0;
-  height: 28rem;
-  z-index: -1;
-  background-color: var(--brand-black);
-  background-image: var(--gradient-mesh-dark);
-}
-
 /* Anchor targets (nav links like /#contact) need to stop below the fixed
    navbar rather than right at the very top of the viewport. */
 section[id],

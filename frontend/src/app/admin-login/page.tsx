@@ -48,16 +48,14 @@ export default function AdminLoginPage() {
 
   if (checking) {
     return (
-      <section className="bg-grain relative flex min-h-screen items-center justify-center">
-        <div aria-hidden="true" className="bg-mesh-light-bleed" />
+      <section className="bg-mesh-light bg-grain relative flex min-h-screen items-center justify-center">
         <Loader2 className="relative z-10 h-6 w-6 animate-spin text-brand-red" aria-hidden="true" />
       </section>
     );
   }
 
   return (
-    <section className="bg-grain relative flex min-h-screen items-center justify-center px-4 py-12">
-      <div aria-hidden="true" className="bg-mesh-light-bleed" />
+    <section className="bg-mesh-light bg-grain relative flex min-h-screen items-center justify-center px-4 py-12">
       <Card className="relative z-10 w-full max-w-sm" padding="lg">
         <h1 className="font-display text-xl font-semibold tracking-tight text-brand-black">Admin sign in</h1>
         <p className="mt-1 text-sm text-brand-black/55">Sign in to manage SR Stays PG listings.</p>

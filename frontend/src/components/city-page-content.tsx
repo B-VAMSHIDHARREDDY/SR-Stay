@@ -67,8 +67,7 @@ export function CityPageContent({ slug }: { slug: string }) {
       <JsonLd data={localBusinessJsonLd} />
       <JsonLd data={faqJsonLd} />
 
-      <section className="bg-grain relative overflow-hidden py-16 lg:py-20">
-        <div aria-hidden="true" className="bg-mesh-light-bleed" />
+      <section className="bg-mesh-light bg-grain relative overflow-hidden py-16 lg:py-20">
         <div className="container-page relative z-10">
           <nav className="text-xs text-brand-black/50" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-red">Home</Link>

@@ -124,8 +124,7 @@ export function SearchLocationPicker() {
 
   return (
     <>
-      <section className="bg-grain relative py-8 sm:py-12">
-        <div aria-hidden="true" className="bg-mesh-light-bleed" />
+      <section className="bg-mesh-light bg-grain relative py-8 sm:py-12">
         <div className="container-page relative z-10 max-w-2xl">
           <div className="flex items-center gap-3">
             <Link

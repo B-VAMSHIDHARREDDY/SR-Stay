@@ -185,8 +185,7 @@ export function StyleGuideClient() {
 
   return (
     <div className="bg-cream">
-      <div className="bg-grain relative border-b border-border py-14">
-        <div aria-hidden="true" className="bg-mesh-light-bleed" />
+      <div className="bg-mesh-light bg-grain relative border-b border-border py-14">
         <div className="container-page relative z-10">
           <Badge variant="neutral">Internal — not indexed</Badge>
           <h1 className="font-display mt-4 text-4xl font-semibold tracking-tight text-brand-black sm:text-h1">
