@@ -7,7 +7,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Navbar />
-      <main className="flex-1 pt-[var(--header-h)]">
+      <main className="flex-1">
         <PageTransition>{children}</PageTransition>
       </main>
       <Footer />

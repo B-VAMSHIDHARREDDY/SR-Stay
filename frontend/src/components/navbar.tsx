@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, User, X } from "lucide-react";
 import { Logo } from "./logo";
@@ -19,10 +20,20 @@ const navLinks = [
   { href: "/#contact", label: "Contact" },
 ];
 
+/** Only routes with a real, distinct URL can reliably show as "active" —
+ * the rest are same-page anchors on the homepage with no independent route
+ * to key off without scroll-spy, which is out of scope here. */
+function isActive(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  if (href === "/search") return pathname === "/search" || pathname.startsWith("/pg-in-");
+  return false;
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     function onScroll() {
@@ -46,72 +57,85 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
-      <div
-        className={cn(
-          "container-page flex h-14 items-center justify-between rounded-full border border-black/5 bg-[#f9e0dd] px-4 transition-shadow duration-300 sm:h-16 sm:px-5",
-          scrolled ? "shadow-lg" : "shadow-sm",
-        )}
-      >
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-[background-color,box-shadow] duration-300",
+        scrolled ? "bg-cream/85 shadow-sm backdrop-blur-md" : "bg-transparent",
+      )}
+    >
+      <div className="container-page grid h-[4.5rem] grid-cols-[auto_1fr_auto] items-center gap-4 sm:h-20">
         <Logo />
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-brand-black/75 transition-colors hover:text-brand-red"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center justify-center gap-6 lg:flex xl:gap-8" aria-label="Primary">
+          {navLinks.map((link) => {
+            const active = isActive(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "text-sm font-medium transition-colors",
+                  active ? "text-brand-red" : "text-brand-black/75 hover:text-brand-red",
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="hidden lg:block">
-          {loggedIn ? (
-            <Button href="/account" size="sm" variant="outline" icon={<User className="h-4 w-4" aria-hidden="true" />}>
-              My Account
-            </Button>
-          ) : (
-            <Button href="/login" size="sm">
-              Login
-            </Button>
-          )}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-brand-black transition-colors hover:bg-black/5 lg:hidden"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {open ? (
-              <motion.span
-                key="close"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: DURATION.fast, ease: EASE }}
-                className="flex"
+        <div className="flex items-center justify-end gap-2">
+          <div className="hidden lg:block">
+            {loggedIn ? (
+              <Link
+                href="/account"
+                className="flex items-center gap-1.5 text-sm font-semibold text-brand-black transition-colors hover:text-brand-red"
               >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </motion.span>
+                <User className="h-4 w-4" aria-hidden="true" />
+                My Account
+              </Link>
             ) : (
-              <motion.span
-                key="menu"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: DURATION.fast, ease: EASE }}
-                className="flex"
-              >
-                <Menu className="h-5 w-5" aria-hidden="true" />
-              </motion.span>
+              <Button href="/login" size="sm">
+                Login
+              </Button>
             )}
-          </AnimatePresence>
-        </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-brand-black transition-colors hover:bg-black/5 lg:hidden"
+            aria-label="Toggle menu"
+            aria-expanded={open}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {open ? (
+                <motion.span
+                  key="close"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: DURATION.fast, ease: EASE }}
+                  className="flex"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="menu"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: DURATION.fast, ease: EASE }}
+                  className="flex"
+                >
+                  <Menu className="h-5 w-5" aria-hidden="true" />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -121,25 +145,32 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: DURATION.base, ease: EASE }}
-            className="bg-mesh-dark bg-grain fixed inset-0 z-40 flex flex-col pt-24 pb-8 lg:hidden"
+            className="bg-mesh-dark bg-grain fixed inset-0 z-40 flex flex-col pt-20 pb-8 lg:hidden"
           >
             <nav className="container-page relative z-10 flex flex-1 flex-col gap-1" aria-label="Mobile">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: DURATION.base, ease: EASE, delay: 0.05 + i * 0.04 }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="font-display block rounded-2xl px-3 py-3.5 text-2xl font-semibold text-white/90 transition-colors hover:bg-white/5 hover:text-white"
+              {navLinks.map((link, i) => {
+                const active = isActive(pathname, link.href);
+                return (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: DURATION.base, ease: EASE, delay: 0.05 + i * 0.04 }}
                   >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "font-display block rounded-2xl px-3 py-3.5 text-2xl font-semibold transition-colors hover:bg-white/5",
+                        active ? "text-brand-red" : "text-white/90 hover:text-white",
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
