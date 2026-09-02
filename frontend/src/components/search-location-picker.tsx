@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Building2, MapPin } from "lucide-react";
 import { cities, type City } from "@/lib/cities";
@@ -57,9 +57,17 @@ export function SearchLocationPicker() {
   const [selectedLocality, setSelectedLocality] = useState<string>(cities[0].localities[0] ?? ALL_AREAS);
   const [userPicked, setUserPicked] = useState(false);
 
+  const areaSelectRef = useRef<HTMLDivElement>(null);
+
   const scrollToResults = useCallback(() => {
     requestAnimationFrame(() => {
       document.getElementById("pg-listings")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, []);
+
+  const focusAreaSelect = useCallback(() => {
+    requestAnimationFrame(() => {
+      areaSelectRef.current?.querySelector<HTMLButtonElement>("[data-select-trigger]")?.focus();
     });
   }, []);
 
@@ -113,7 +121,9 @@ export function SearchLocationPicker() {
     setUserPicked(true);
     setSelectedCity(city);
     setSelectedLocality(city.localities[0] ?? ALL_AREAS);
-    scrollToResults();
+    // Draw attention to the Area field next, rather than jumping straight to
+    // results — the city alone doesn't mean the user is done narrowing down.
+    focusAreaSelect();
   }
 
   function handleLocalityChange(value: string) {
@@ -149,15 +159,17 @@ export function SearchLocationPicker() {
               searchable
               size="lg"
             />
-            <Select
-              label="Area"
-              leadingIcon={<MapPin className="h-4 w-4" aria-hidden="true" />}
-              options={localityOptions}
-              value={selectedLocality}
-              onChange={handleLocalityChange}
-              searchable
-              size="lg"
-            />
+            <div ref={areaSelectRef}>
+              <Select
+                label="Area"
+                leadingIcon={<MapPin className="h-4 w-4" aria-hidden="true" />}
+                options={localityOptions}
+                value={selectedLocality}
+                onChange={handleLocalityChange}
+                searchable
+                size="lg"
+              />
+            </div>
           </div>
         </div>
       </section>
