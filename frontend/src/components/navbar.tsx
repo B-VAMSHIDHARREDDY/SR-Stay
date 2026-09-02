@@ -49,7 +49,7 @@ export function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
       <div
         className={cn(
-          "glass-panel container-page flex h-14 items-center justify-between rounded-full border border-black/5 px-4 transition-shadow duration-300 sm:h-16 sm:px-5",
+          "container-page flex h-14 items-center justify-between rounded-full border border-black/5 bg-paper px-4 transition-shadow duration-300 sm:h-16 sm:px-5",
           scrolled ? "shadow-lg" : "shadow-sm",
         )}
       >
