@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
@@ -16,6 +17,11 @@ import { listOwners } from "@/lib/owner-api";
 import type { Gender, Owner, PGListingInput } from "@/lib/types";
 
 const NO_OWNER = "";
+
+function ownerLabel(owner: Owner): string {
+  const publicPhone = owner.phone_numbers.find((p) => p.type === "public")?.number;
+  return publicPhone ? `${owner.name} (${publicPhone})` : owner.name;
+}
 
 const cityOptions = cities.map((c) => ({ value: c.slug, label: c.name }));
 const genderOptions: { value: Gender; label: string }[] = [
@@ -97,21 +103,27 @@ export function PgListingForm({
       setAddingAmenity(false);
     }
   }
-  const [contactPhone, setContactPhone] = useState(initial?.contact_phone ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [ownerId, setOwnerId] = useState(initial?.owner_id ?? NO_OWNER);
+  const [ownerError, setOwnerError] = useState<string | undefined>(undefined);
   const [isActive, setIsActive] = useState(initial?.is_active ?? true);
 
   const [owners, setOwners] = useState<Owner[]>([]);
+  const [ownersLoading, setOwnersLoading] = useState(true);
   useEffect(() => {
-    listOwners().then(setOwners).catch(() => {
-      // Silent — the owner field just falls back to "No owner assigned".
-    });
+    listOwners()
+      .then(setOwners)
+      .catch((err) => {
+        toast({
+          title: "Couldn't load owners",
+          description: err instanceof ApiError ? err.message : undefined,
+          variant: "error",
+        });
+      })
+      .finally(() => setOwnersLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const ownerOptions = useMemo(
-    () => [{ value: NO_OWNER, label: "No owner assigned" }, ...owners.map((o) => ({ value: o.id, label: `${o.name} (${o.phone})` }))],
-    [owners],
-  );
+  const ownerOptions = useMemo(() => owners.map((o) => ({ value: o.id, label: ownerLabel(o) })), [owners]);
 
   const localityOptions = useMemo(() => {
     const areas = getCityBySlug(city)?.localities ?? [];
@@ -124,6 +136,11 @@ export function PgListingForm({
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!ownerId) {
+      setOwnerError("Every PG needs a primary owner — add one first if the list is empty.");
+      return;
+    }
+    setOwnerError(undefined);
     setSubmitting(true);
     try {
       await onSubmit({
@@ -137,9 +154,8 @@ export function PgListingForm({
         sharing_types: fromCsv(sharingTypes),
         amenities,
         images: fromCsv(images),
-        contact_phone: contactPhone,
         description,
-        owner_id: ownerId || null,
+        owner_id: ownerId,
         is_active: isActive,
       });
       router.push("/admin/listings");
@@ -271,15 +287,32 @@ export function PgListingForm({
       </div>
 
       <div className="space-y-4">
-        <FormSectionLabel>Contact & visibility</FormSectionLabel>
-        <Input
-          label="Contact phone"
-          type="tel"
-          required
-          value={contactPhone}
-          onChange={(e) => setContactPhone(e.target.value)}
-        />
-        <Select label="Owner" searchable options={ownerOptions} value={ownerId} onChange={setOwnerId} />
+        <FormSectionLabel>Owner & visibility</FormSectionLabel>
+        <div>
+          <Select
+            label="Owner"
+            required
+            searchable
+            options={ownerOptions}
+            value={ownerId}
+            onChange={(v) => {
+              setOwnerId(v);
+              if (v) setOwnerError(undefined);
+            }}
+            placeholder={ownersLoading ? "Loading owners…" : "Select the PG's owner"}
+            emptyMessage="No owners yet — add one first"
+          />
+          {ownerError ? (
+            <p className="text-caption mt-1.5 text-error">{ownerError}</p>
+          ) : (
+            <p className="text-caption mt-1.5 text-brand-black/50">
+              The public phone number shown on this listing comes from the owner&apos;s contact details.{" "}
+              <Link href="/admin/owners" className="font-medium text-brand-red hover:underline">
+                Manage owners
+              </Link>
+            </p>
+          )}
+        </div>
         <div className="w-full">
           <label className="text-label mb-1.5 block font-medium text-brand-black/80">Description</label>
           <textarea

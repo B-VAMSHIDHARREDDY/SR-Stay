@@ -32,7 +32,7 @@ def create_owner(
         return services.create_owner(db, payload.model_dump())
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="An owner with this phone number already exists")
+        raise HTTPException(status_code=409, detail="Each phone type (public/whatsapp/private) can only be set once")
 
 
 @admin_router.put("/{owner_id}", response_model=OwnerOut)
@@ -49,7 +49,7 @@ def update_owner(
         return services.update_owner(db, owner, payload.model_dump(exclude_unset=True))
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="An owner with this phone number already exists")
+        raise HTTPException(status_code=409, detail="Each phone type (public/whatsapp/private) can only be set once")
 
 
 @admin_router.delete("/{owner_id}", status_code=204)

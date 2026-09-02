@@ -34,9 +34,11 @@ class PGListing(Base):
     amenities: Mapped[list[str]] = mapped_column(JSONB, default=list)
     images: Mapped[list[str]] = mapped_column(JSONB, default=list)
 
-    contact_phone: Mapped[str] = mapped_column(String(20), nullable=False)
     description: Mapped[str] = mapped_column(Text, default="")
 
+    # Contact info now lives on the linked Owner (see app/owners/models.py —
+    # OwnerPhoneNumber has public/whatsapp/private rows per owner) rather
+    # than being duplicated per listing.
     owner_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("owners.id", ondelete="SET NULL"), nullable=True, index=True
     )

@@ -19,6 +19,7 @@ export function Select({
   placeholder = "Select…",
   label,
   hideLabel = false,
+  required = false,
   leadingIcon,
   searchable = false,
   emptyMessage = "No results found",
@@ -32,6 +33,7 @@ export function Select({
   placeholder?: string;
   label?: string;
   hideLabel?: boolean;
+  required?: boolean;
   leadingIcon?: ReactNode;
   searchable?: boolean;
   emptyMessage?: string;
@@ -143,6 +145,7 @@ export function Select({
           className={hideLabel ? "sr-only" : "text-label mb-1.5 block font-medium text-brand-black/80"}
         >
           {label}
+          {required && <span className="ml-0.5 text-error">*</span>}
         </label>
       )}
       <button

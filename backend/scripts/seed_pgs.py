@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from sqlalchemy import select
 
 from app.database import SessionLocal
+from app.owners.models import Owner, OwnerPhoneNumber
 from app.pgs.models import Gender, PGListing
 
 # Keep these in sync with the `localities` arrays in frontend/src/lib/cities.ts —
@@ -110,6 +111,7 @@ GENDERS = [Gender.unisex, Gender.male, Gender.female]
 
 # Obviously-fake, easy to bulk-identify/clean-up placeholder contact number.
 PLACEHOLDER_PHONE = "9999999999"
+DEMO_OWNER_NAME = "Demo Seed Owner"
 
 PGS_PER_AREA = 10
 
@@ -122,7 +124,7 @@ def pick(pool: list[str], start: int, count: int) -> list[str]:
     return [pool[(start + i) % len(pool)] for i in range(count)]
 
 
-def build_listings() -> list[dict]:
+def build_listings(owner_id) -> list[dict]:
     listings = []
     for city_slug, areas in CITY_AREAS.items():
         city_name = CITY_DISPLAY_NAME[city_slug]
@@ -149,22 +151,37 @@ def build_listings() -> list[dict]:
                         "sharing_types": sharing_types,
                         "amenities": amenities,
                         "images": [f"https://picsum.photos/seed/{seed}-{k}/640/480" for k in range(3)],
-                        "contact_phone": PLACEHOLDER_PHONE,
                         "description": (
                             f"{brand} in {area}, {city_name} offers a comfortable PG stay with "
                             f"{', '.join(amenities[:3])} and more. Zero brokerage, verified listing."
                         ),
+                        "owner_id": owner_id,
                         "is_active": True,
                     }
                 )
     return listings
 
 
-def main() -> None:
-    listings = build_listings()
+def get_or_create_demo_owner(db) -> Owner:
+    owner = db.scalar(select(Owner).where(Owner.name == DEMO_OWNER_NAME))
+    if owner is not None:
+        return owner
 
+    owner = Owner(name=DEMO_OWNER_NAME, notes="Auto-created by scripts/seed_pgs.py for demo listings.")
+    db.add(owner)
+    db.flush()
+    db.add(OwnerPhoneNumber(owner_id=owner.id, type="public", number=PLACEHOLDER_PHONE))
+    db.commit()
+    db.refresh(owner)
+    return owner
+
+
+def main() -> None:
     db = SessionLocal()
     try:
+        owner = get_or_create_demo_owner(db)
+        listings = build_listings(owner.id)
+
         existing = {
             (row.city, row.locality, row.name)
             for row in db.execute(

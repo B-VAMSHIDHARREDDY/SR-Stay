@@ -17,14 +17,14 @@ class PGBase(BaseModel):
     sharing_types: list[str] = Field(default_factory=list)
     amenities: list[str] = Field(default_factory=list)
     images: list[str] = Field(default_factory=list)
-    contact_phone: str = Field(min_length=6, max_length=20)
     description: str = ""
-    owner_id: uuid.UUID | None = None
     is_active: bool = True
 
 
 class PGCreate(PGBase):
-    pass
+    # Every new PG must have a primary owner — contact info is sourced from
+    # the owner's phone numbers, so a listing can't exist without one.
+    owner_id: uuid.UUID
 
 
 class PGUpdate(BaseModel):
@@ -38,7 +38,6 @@ class PGUpdate(BaseModel):
     sharing_types: list[str] | None = None
     amenities: list[str] | None = None
     images: list[str] | None = None
-    contact_phone: str | None = Field(default=None, min_length=6, max_length=20)
     description: str | None = None
     owner_id: uuid.UUID | None = None
     is_active: bool | None = None
@@ -48,6 +47,12 @@ class PGOut(PGBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
+    owner_id: uuid.UUID | None
+    # Computed at query time from the linked Owner's OwnerPhoneNumber rows
+    # (see app/pgs/services.py) — never sourced from a column on this table,
+    # and the `private` type is intentionally never surfaced here.
+    owner_public_phone: str | None = None
+    owner_whatsapp_phone: str | None = None
     created_at: datetime
     updated_at: datetime
 

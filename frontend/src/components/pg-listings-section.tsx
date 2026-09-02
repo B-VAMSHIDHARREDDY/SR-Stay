@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "motion/react";
-import { IndianRupee, MapPin, Phone, TriangleAlert, Users } from "lucide-react";
+import { IndianRupee, MapPin, MessageCircle, Phone, TriangleAlert, Users } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -15,6 +15,12 @@ import { searchPgs } from "@/lib/pg-api";
 import type { PGListing } from "@/lib/types";
 
 const PAGE_SIZE = 9;
+
+function whatsappHref(number: string): string {
+  const digits = number.replace(/\D/g, "");
+  const withCountryCode = digits.length === 10 ? `91${digits}` : digits;
+  return `https://wa.me/${withCountryCode}`;
+}
 
 export function PgListingsSection({
   citySlug,
@@ -179,13 +185,30 @@ export function PgListingsSection({
                       )}
                     </div>
 
-                    <a
-                      href={`tel:${pg.contact_phone}`}
-                      className="mt-3 flex items-center justify-center gap-1.5 rounded-full bg-gradient-ember py-2.5 text-sm font-semibold text-white shadow-glow-red transition-[filter] hover:brightness-110"
-                    >
-                      <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-                      Contact Owner
-                    </a>
+                    {pg.owner_public_phone ? (
+                      <div className="mt-3 flex items-center gap-2">
+                        <a
+                          href={`tel:${pg.owner_public_phone}`}
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-ember py-2.5 text-sm font-semibold text-white shadow-glow-red transition-[filter] hover:brightness-110"
+                        >
+                          <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+                          Call
+                        </a>
+                        <a
+                          href={whatsappHref(pg.owner_whatsapp_phone ?? pg.owner_public_phone)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Contact owner on WhatsApp"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-success/25 bg-success/8 text-success-dark transition-colors hover:bg-success/15"
+                        >
+                          <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                        </a>
+                      </div>
+                    ) : (
+                      <p className="mt-3 rounded-full bg-black/5 py-2.5 text-center text-sm font-medium text-brand-black/40">
+                        Contact info coming soon
+                      </p>
+                    )}
                   </Card>
                 </motion.div>
               ))}

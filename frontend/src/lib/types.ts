@@ -12,15 +12,20 @@ export interface PGListing {
   sharing_types: string[];
   amenities: string[];
   images: string[];
-  contact_phone: string;
   description: string;
   owner_id: string | null;
+  /** Computed from the linked owner's phone numbers — never sent, only returned. */
+  owner_public_phone: string | null;
+  owner_whatsapp_phone: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
 }
 
-export type PGListingInput = Omit<PGListing, "id" | "created_at" | "updated_at">;
+export type PGListingInput = Omit<
+  PGListing,
+  "id" | "created_at" | "updated_at" | "owner_public_phone" | "owner_whatsapp_phone"
+>;
 
 export interface PGSearchResponse {
   items: PGListing[];
@@ -40,18 +45,39 @@ export interface Amenity {
   name: string;
 }
 
+/** Not a closed union at the API layer (the DB column is a plain string so
+ * new types need no migration) — kept as a union here because the admin UI
+ * only exposes these three today. Extend alongside the backend's PhoneType. */
+export type PhoneType = "public" | "whatsapp" | "private";
+
+export interface OwnerPhoneNumber {
+  id: string;
+  type: PhoneType;
+  number: string;
+}
+
+export interface OwnerPhoneNumberInput {
+  type: PhoneType;
+  number: string;
+}
+
 export interface Owner {
   id: string;
   name: string;
-  phone: string;
   email: string | null;
   notes: string;
   pg_count: number;
+  phone_numbers: OwnerPhoneNumber[];
   created_at: string;
   updated_at: string;
 }
 
-export type OwnerInput = Omit<Owner, "id" | "pg_count" | "created_at" | "updated_at">;
+export interface OwnerInput {
+  name: string;
+  email: string | null;
+  notes: string;
+  phone_numbers: OwnerPhoneNumberInput[];
+}
 
 export interface UserProfile {
   id: string;

@@ -2,12 +2,9 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import { MotionConfig } from "motion/react";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/site-config";
 import { ToastProvider } from "@/components/ui/Toast";
-import { PageTransition } from "@/components/page-transition";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -73,13 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col font-sans">
         <JsonLd data={mobileApplicationJsonLd} />
         <MotionConfig reducedMotion="user">
-          <ToastProvider>
-            <Navbar />
-            <main className="flex-1 pt-[var(--header-h)]">
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
-          </ToastProvider>
+          <ToastProvider>{children}</ToastProvider>
         </MotionConfig>
       </body>
     </html>
