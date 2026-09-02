@@ -187,7 +187,7 @@ export function Select({
             initial="initial"
             animate="animate"
             exit="exit"
-            className="glass-panel absolute z-50 mt-2 w-full origin-top rounded-2xl border border-border p-2 shadow-lg"
+            className="absolute z-50 mt-2 w-full origin-top rounded-2xl border border-border bg-paper p-2 shadow-lg"
           >
             {searchable && (
               <div className="mb-2 flex items-center gap-2 rounded-lg border border-border px-3 py-2">
