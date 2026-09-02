@@ -34,6 +34,11 @@ export interface AdminUser {
   created_at: string;
 }
 
+export interface Amenity {
+  id: string;
+  name: string;
+}
+
 export interface UserProfile {
   id: string;
   phone: string;

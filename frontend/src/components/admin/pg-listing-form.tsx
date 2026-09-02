@@ -2,12 +2,16 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
+import { cn } from "@/lib/cn";
 import { cities, getCityBySlug } from "@/lib/cities";
 import { ApiError } from "@/lib/api";
+import { createAmenity } from "@/lib/pg-api";
+import { useAmenities } from "@/lib/use-amenities";
 import type { Gender, PGListingInput } from "@/lib/types";
 
 const cityOptions = cities.map((c) => ({ value: c.slug, label: c.name }));
@@ -51,8 +55,45 @@ export function PgListingForm({
     initial?.security_deposit != null ? String(initial.security_deposit) : "",
   );
   const [sharingTypes, setSharingTypes] = useState(toCsv(initial?.sharing_types ?? []));
-  const [amenities, setAmenities] = useState(toCsv(initial?.amenities ?? []));
+  const [amenities, setAmenities] = useState<string[]>(initial?.amenities ?? []);
   const [images, setImages] = useState(toCsv(initial?.images ?? []));
+
+  const { amenities: amenityOptions, loading: amenitiesLoading } = useAmenities();
+  const [newAmenity, setNewAmenity] = useState("");
+  const [addingAmenity, setAddingAmenity] = useState(false);
+  const [localAmenityOptions, setLocalAmenityOptions] = useState<string[]>([]);
+
+  const allAmenityNames = useMemo(() => {
+    const fromApi = amenityOptions.map((a) => a.name);
+    // Selected amenities from `initial` (edit mode) or just-created ones that
+    // aren't in the fetched list yet stay selectable/visible too.
+    const extra = [...amenities, ...localAmenityOptions].filter((name) => !fromApi.includes(name));
+    return [...fromApi, ...extra];
+  }, [amenityOptions, amenities, localAmenityOptions]);
+
+  function toggleAmenity(name: string) {
+    setAmenities((prev) => (prev.includes(name) ? prev.filter((a) => a !== name) : [...prev, name]));
+  }
+
+  async function handleAddAmenity() {
+    const name = newAmenity.trim();
+    if (!name) return;
+    setAddingAmenity(true);
+    try {
+      const created = await createAmenity(name);
+      setLocalAmenityOptions((prev) => [...prev, created.name]);
+      setAmenities((prev) => (prev.includes(created.name) ? prev : [...prev, created.name]));
+      setNewAmenity("");
+    } catch (err) {
+      toast({
+        title: "Couldn't add amenity",
+        description: err instanceof ApiError ? err.message : undefined,
+        variant: "error",
+      });
+    } finally {
+      setAddingAmenity(false);
+    }
+  }
   const [contactPhone, setContactPhone] = useState(initial?.contact_phone ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [isActive, setIsActive] = useState(initial?.is_active ?? true);
@@ -79,7 +120,7 @@ export function PgListingForm({
         price_monthly: Number(priceMonthly),
         security_deposit: securityDeposit ? Number(securityDeposit) : null,
         sharing_types: fromCsv(sharingTypes),
-        amenities: fromCsv(amenities),
+        amenities,
         images: fromCsv(images),
         contact_phone: contactPhone,
         description,
@@ -152,12 +193,59 @@ export function PgListingForm({
 
       <div className="space-y-4">
         <FormSectionLabel>Amenities & photos</FormSectionLabel>
-        <Input
-          label="Amenities"
-          helperText="Comma-separated, e.g. WiFi, Food, Laundry, AC"
-          value={amenities}
-          onChange={(e) => setAmenities(e.target.value)}
-        />
+        <div>
+          <label className="text-label mb-1.5 block font-medium text-brand-black/80">Amenities</label>
+          {amenitiesLoading ? (
+            <p className="text-sm text-brand-black/45">Loading amenities…</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {allAmenityNames.map((name) => {
+                const active = amenities.includes(name);
+                return (
+                  <button
+                    key={name}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => toggleAmenity(name)}
+                    className={cn(
+                      "rounded-full border px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors",
+                      active
+                        ? "border-brand-red bg-brand-red/8 text-brand-red"
+                        : "border-border bg-paper text-brand-black/75 hover:border-brand-red/40 hover:text-brand-red",
+                    )}
+                  >
+                    {name}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          <div className="mt-2.5 flex items-center gap-2">
+            <input
+              value={newAmenity}
+              onChange={(e) => setNewAmenity(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddAmenity();
+                }
+              }}
+              placeholder="Add a new amenity…"
+              className="h-9 w-full max-w-56 rounded-lg border border-border bg-paper px-3 text-sm text-brand-black outline-none transition-colors placeholder:text-brand-black/40 focus:border-brand-red focus:ring-2 focus:ring-brand-red/15"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              icon={<Plus className="h-4 w-4" aria-hidden="true" />}
+              loading={addingAmenity}
+              disabled={!newAmenity.trim()}
+              onClick={handleAddAmenity}
+            >
+              Add
+            </Button>
+          </div>
+        </div>
         <Input
           label="Image URLs"
           helperText="Comma-separated URLs"

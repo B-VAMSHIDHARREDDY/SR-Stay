@@ -1,5 +1,5 @@
 import { apiFetch } from "@/lib/api";
-import type { PGListing, PGListingInput, PGSearchResponse } from "@/lib/types";
+import type { Amenity, PGListing, PGListingInput, PGSearchResponse } from "@/lib/types";
 
 export type SortOption = "newest" | "price_asc" | "price_desc";
 
@@ -51,4 +51,16 @@ export function updatePg(id: string, payload: Partial<PGListingInput>): Promise<
 
 export function deletePg(id: string): Promise<void> {
   return apiFetch<void>(`/api/admin/pgs/${id}`, { method: "DELETE", auth: true });
+}
+
+export function listAmenities(): Promise<Amenity[]> {
+  return apiFetch<Amenity[]>("/api/amenities");
+}
+
+export function createAmenity(name: string): Promise<Amenity> {
+  return apiFetch<Amenity>("/api/admin/amenities", { method: "POST", body: { name }, auth: true });
+}
+
+export function deleteAmenity(id: string): Promise<void> {
+  return apiFetch<void>(`/api/admin/amenities/${id}`, { method: "DELETE", auth: true });
 }

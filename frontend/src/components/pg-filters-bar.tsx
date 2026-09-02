@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { DURATION, EASE, fadeIn } from "@/lib/motion";
 import { Badge } from "@/components/ui/Badge";
 import { Select, type SelectOption } from "@/components/ui/Select";
+import { useAmenities } from "@/lib/use-amenities";
 import type { SortOption } from "@/lib/pg-api";
 
 export interface PgFiltersValue {
@@ -55,8 +56,6 @@ const SHARING_OPTIONS = [
   { value: "Triple", label: "Triple" },
   { value: "Four Sharing", label: "4 Sharing" },
 ];
-
-const AMENITY_OPTIONS = ["WiFi", "Food", "AC", "Laundry", "Power Backup", "Parking"];
 
 const SORT_OPTIONS: SelectOption[] = [
   { value: "newest", label: "Newest first" },
@@ -122,6 +121,8 @@ export function PgFiltersBar({
   className?: string;
 }) {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const { amenities: amenityOptions } = useAmenities();
+  const AMENITY_OPTIONS = amenityOptions.map((a) => a.name);
 
   function toggleAmenity(amenity: string) {
     const next = value.amenities.includes(amenity)
