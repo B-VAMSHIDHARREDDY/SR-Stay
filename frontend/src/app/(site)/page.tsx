@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { Hero } from "@/components/sections/hero";
+import { NearbyPgs } from "@/components/sections/nearby-pgs";
 import { ProblemSolution } from "@/components/sections/problem-solution";
 import { SeekerFeatures } from "@/components/sections/seeker-features";
 import { OwnerFeatures } from "@/components/sections/owner-features";
@@ -34,6 +35,7 @@ export default function Home() {
     <>
       <JsonLd data={faqJsonLd} />
       <Hero />
+      <NearbyPgs />
       <ProblemSolution />
       <SeekerFeatures />
       <OwnerFeatures />
