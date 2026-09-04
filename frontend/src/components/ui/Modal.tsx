@@ -103,25 +103,31 @@ export function Modal({
             aria-labelledby={titleId}
             aria-describedby={description ? descId : undefined}
             tabIndex={-1}
-            className={cn("relative w-full rounded-3xl bg-paper p-6 shadow-lg", sizeClasses[size], className)}
+            className={cn(
+              "relative flex max-h-[85vh] w-full flex-col rounded-3xl bg-paper p-6 shadow-lg",
+              sizeClasses[size],
+              className,
+            )}
           >
             <button
               type="button"
               onClick={onClose}
               aria-label="Close dialog"
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-brand-black/50 transition-colors hover:bg-black/5 hover:text-brand-black"
+              className="absolute right-4 top-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-brand-black/50 transition-colors hover:bg-black/5 hover:text-brand-black"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
-            <h2 id={titleId} className="font-display text-h4 pr-8 font-bold text-brand-black">
-              {title}
-            </h2>
-            {description && (
-              <p id={descId} className="mt-1.5 text-sm text-brand-black/60">
-                {description}
-              </p>
-            )}
-            <div className="mt-5">{children}</div>
+            <div className="shrink-0">
+              <h2 id={titleId} className="font-display text-h4 pr-8 font-bold text-brand-black">
+                {title}
+              </h2>
+              {description && (
+                <p id={descId} className="mt-1.5 text-sm text-brand-black/60">
+                  {description}
+                </p>
+              )}
+            </div>
+            <div className="ui-scrollbar mt-5 min-h-0 flex-1 overflow-y-auto">{children}</div>
           </motion.div>
         </motion.div>
       )}

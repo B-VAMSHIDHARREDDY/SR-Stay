@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "motion/react";
-import { MapPin, Search, Home, Star } from "lucide-react";
+import { Home, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useCountUp } from "@/lib/use-count-up";
 
@@ -45,23 +44,7 @@ export function Hero() {
             owners, and PG maintenance — together.
           </p>
 
-          <Link
-            href="/search"
-            aria-label="Search for PG by city or locality"
-            className="glass-panel mt-8 flex flex-col gap-2 rounded-3xl border border-black/8 p-2.5 shadow-lg transition-shadow duration-200 hover:shadow-xl sm:flex-row sm:items-center sm:rounded-full"
-          >
-            <span className="flex flex-1 items-center gap-2 text-sm text-brand-black/40 sm:pl-3.5">
-              <MapPin className="h-4 w-4 shrink-0 text-brand-red" aria-hidden="true" />
-              Search by city or locality…
-            </span>
-            <div className="hidden h-8 w-px bg-black/10 sm:block" aria-hidden="true" />
-            <span className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-ember px-6 text-sm font-semibold tracking-tight text-white shadow-glow-red">
-              <Search className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
-              Search PG
-            </span>
-          </Link>
-
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <Button href="/search">Find My PG</Button>
             <Button href="/#list-your-pg" variant="outline">
               List Your PG (For Owners)
